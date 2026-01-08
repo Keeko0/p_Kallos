@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Kallos — Logowanie</title>
+<style>
+  /* ======= DESIGN TOKENS ======= */
+  :root{
+    --bg:#ffffff;
+    --surface:#f6f7f9;
+    --text:#0b1720;
+    --muted:#536070;
+    --primary:#0b6df2;
+    --accent:#06a58a;
+    --radius:10px;
+    --focus: 3px solid #ffbf47;
+  }
+
+  body {
+    font-family: Inter, system-ui, -apple-system, sans-serif;
+    margin: 0; background: var(--bg); color: var(--text);
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 16px; box-sizing: border-box;
+  }
+
+  .login-card {
+    background: var(--surface);
+    padding: 2.5rem 2rem;
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    text-align: center;
+  }
+
+  /* ZMIANA: Logo na pełną szerokość */
+  .logo-area {
+    margin-bottom: 1.5rem;
+    display: block; /* Usunięto flex center, bo obrazek i tak zajmie 100% */
+  }
+
+  .logo-img-large {
+    width: 100%;       /* Rozciągnij na 100% szerokości kontenera */
+    height: auto;      /* Zachowaj proporcje (żeby nie spłaszczyć) */
+    display: block;
+    object-fit: contain; /* Bezpiecznik, gdyby obrazek był bardzo wysoki */
+    max-height: 200px; /* Opcjonalnie: żeby logo nie zajęło całego ekranu w pionie */
+    border-radius: var(--radius);
+  }
+
+  h1 { margin: 0 0 0.5rem 0; font-size: 1.5rem; }
+  p.subtitle { margin: 0 0 1.5rem 0; color: var(--muted); font-size: 0.9rem; }
+
+  /* Formularz */
+  .form-group { margin-bottom: 1rem; text-align: left; }
+  label { display: block; font-size: 0.9rem; margin-bottom: 6px; font-weight: 600; }
+  
+  input {
+    width: 100%; padding: 10px; border-radius: 6px;
+    border: 1px solid #ccd7e6; background: var(--bg); color: var(--text);
+    box-sizing: border-box;
+  }
+  input:focus { outline: none; box-shadow: var(--focus); border-color: var(--primary); }
+
+  button.btn-primary {
+    background: var(--primary); color: white; border: 0;
+    padding: 12px; border-radius: 8px; width: 100%;
+    font-weight: 600; cursor: pointer; font-size: 1rem;
+    margin-top: 10px;
+  }
+  button:focus { outline: none; box-shadow: var(--focus); }
+
+  .alert-success {
+    background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0;
+    padding: 12px; border-radius: 8px; margin-bottom: 1.5rem;
+    font-size: 0.9rem; display: none;
+  }
+
+  /* Overlay */
+  .auth-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    display: none; align-items: center; justify-content: center;
+    z-index: 100; backdrop-filter: blur(2px);
+  }
+  .auth-modal {
+    background: var(--bg); padding: 2rem; border-radius: var(--radius);
+    max-width: 350px; text-align: center; width: 90%;
+    border: 1px solid #e5e7eb;
+  }
+</style>
+</head>
+<body>
+
+  <main class="login-card">
+    <div id="logout-msg" class="alert-success" role="alert">
+      Pomyślnie wylogowano z systemu.
+    </div>
+
+    <div class="logo-area">
+      <img src="kallos-big.jpg" alt="Logo Kallos" class="logo-img-large">
+    </div>
+    
+    <h1>Witaj ponownie</h1>
+    <p class="subtitle">Zaloguj się do panelu Kallos</p>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="username">Login</label>
+        <input type="text" id="username" name="username" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="password">Hasło</label>
+        <input type="password" id="password" name="password" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn-primary">Zaloguj się</button>
+    </form>
+  </main>
+
+  <div id="authOverlay" class="auth-overlay" role="dialog" aria-modal="true">
+    <div class="auth-modal">
+      <div style="font-size: 3rem; margin-bottom: 1rem;" aria-hidden="true">🔒</div>
+      <h2 style="margin-top:0">Weryfikacja</h2>
+      <p class="muted">Potwierdź, że to Ty próbujesz się zalogować.</p>
+      <button id="confirmIdentity" class="btn-primary" style="background: var(--accent);">Potwierdzam, to ja</button>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('logout') === 'true') {
+      const msg = document.getElementById('logout-msg');
+      msg.style.display = 'block';
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    const form = document.getElementById('loginForm');
+    const overlay = document.getElementById('authOverlay');
+    const confirmBtn = document.getElementById('confirmIdentity');
+    const userField = document.getElementById('username');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if(userField.value) {
+        overlay.style.display = 'flex';
+        confirmBtn.focus();
+      }
+    });
+
+    confirmBtn.addEventListener('click', () => {
+      localStorage.setItem('kallos_user', userField.value);
+      window.location.href = 'kallos.html';
+    });
+  </script>
+</body>
+</html>
