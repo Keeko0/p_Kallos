@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Kallos — makieta (WCAG)</title>
 
+<link rel="stylesheet" href="style.css">
+
 <script>
   // Sprawdź logowanie
   if (!localStorage.getItem('kallos_user')) {
@@ -15,229 +17,6 @@
   document.documentElement.setAttribute('data-theme', savedTheme);
 </script>
 
-<style>
-  /* ======= DESIGN TOKENS (WCAG-friendly) ======= */
-  :root{
-    --bg:#ffffff;
-    --surface:#f6f7f9;
-    --text:#0b1720;
-    --muted:#536070;
-    --primary:#0b6df2;
-    --accent:#06a58a;
-    --danger:#c53030;
-    --focus: 3px solid #ffbf47;
-    --radius:10px;
-    --max-width:1100px;
-    
-    /* Zmienne dla przycisków i inputów */
-    --btn-text: #ffffff; 
-    --input-bg: #ffffff;
-    --input-border: #ccd7e6;
-  }
-  
-  [data-theme="dark"]{
-    --bg:#0b1116;
-    --surface:#0f1720;
-    --text:#e6eef8;
-    --muted:#9fb0c9;
-    --primary:#5ea8ff;
-    --accent:#57d6b0;
-    --danger:#ff8b8b;
-    --focus: 3px solid #ffd46a;
-    --btn-text: #ffffff;
-    
-    --input-bg: #0b1116;
-    --input-border: #2c3e50;
-  }
-  
-  /* High Contrast: Żółte tło, Niebieski tekst przycisków, Inputy czarne z białym tekstem */
-  [data-theme="high-contrast"]{
-    --bg:#000000;
-    --surface:#000000;
-    --text:#ffffff;
-    --muted:#ffffff;
-    --primary:#ffff00; /* Żółty */
-    --accent:#00ff00;
-    --danger:#ff0000;
-    --focus: 3px dashed #ffff00;
-    
-    --btn-text: #000000; /* Ciemny niebieski na żółtym */
-    --input-bg: #000000;
-    --input-border: #ffff00; /* Żółta ramka inputów */
-  }
-
-  /* ======= BASIC LAYOUT ======= */
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    margin:0; background:var(--bg); color:var(--text);
-    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-    line-height:1.35;
-    padding:0 16px;
-  }
-  .app{
-    max-width:var(--max-width);
-    margin:18px auto;
-    display:grid;
-    grid-template-columns:240px 1fr;
-    gap:18px;
-    align-items:start;
-  }
-
-  header.app-header{
-    grid-column:1/-1;
-    display:flex; align-items:center; justify-content:space-between;
-    gap:12px; padding:12px; background:var(--surface); border-radius:var(--radius);
-  }
-  /* Fix dla High Contrast Header Border */
-  [data-theme="high-contrast"] header.app-header { border: 1px solid var(--primary); }
-
-  .brand{display:flex; gap:12px; align-items:center}
-  
-  .logo {
-    height: 44px;      
-    width: auto;       
-    max-width: 150px; 
-    object-fit: contain;
-    display: block;
-    border-radius: 8px;
-  }
-
-  .brand h1{margin:0;font-size:1rem}
-  
-  .controls{display:flex; gap:12px; align-items:center}
-  
-  .user-badge {
-    display: flex; flex-direction: column; align-items: flex-end;
-    font-size: 0.85rem; line-height: 1.2;
-    text-align: right;
-  }
-  .user-badge strong { color: var(--primary); }
-
-  /* Buttons */
-  button, .btn {
-    background:var(--primary); 
-    color:var(--btn-text); 
-    border:0; padding:8px 12px; border-radius:8px;
-    cursor:pointer; font-weight:600;
-  }
-  
-  button.btn-outline {
-    background: transparent; border: 1px solid var(--muted); color: var(--text);
-  }
-  [data-theme="high-contrast"] button.btn-outline {
-    border: 2px solid var(--primary); color: var(--text);
-  }
-  
-  button:focus, .btn:focus{outline:none; box-shadow:var(--focus);}
-
-  /* ======= SIDEBAR ======= */
-  nav.sidebar{
-    background:var(--surface); padding:12px; border-radius:var(--radius); height:calc(100vh - 160px); overflow:auto;
-  }
-  [data-theme="high-contrast"] nav.sidebar { border: 1px solid var(--muted); }
-
-  .nav-list{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:6px}
-  .nav-list button{
-    text-align:left; background:transparent; color:var(--text); padding:10px; border-radius:8px; border:0;
-    width: 100%;
-  }
-  .nav-list button[aria-current="true"]{ background:linear-gradient(90deg, rgba(11,109,242,0.12), transparent) }
-  
-  /* Sidebar active state fix */
-  [data-theme="high-contrast"] .nav-list button[aria-current="true"] {
-      background: var(--primary);
-      color: var(--btn-text);
-  }
-
-  .skip-link{
-    position:absolute; left:-999px; top:auto; width:1px; height:1px; overflow:hidden;
-  }
-  .skip-link:focus{left:16px; top:16px; width:auto; height:auto; padding:8px; background:var(--primary); color:var(--btn-text); border-radius:6px}
-
-  /* ======= MAIN CONTENT ======= */
-  main.content{
-    background:var(--surface); padding:16px; border-radius:var(--radius); min-height:60vh;
-  }
-  [data-theme="high-contrast"] main.content { border: 1px solid var(--muted); }
-
-  .toolbar{display:flex; gap:12px; align-items:center; margin-bottom:12px; flex-wrap:wrap}
-  .kpi{
-    display:flex; gap:12px; align-items:center; background:linear-gradient(180deg,#fff0 0%,transparent 60%); padding:8px 12px; border-radius:8px;
-  }
-  [data-theme="high-contrast"] .kpi { border: 1px solid var(--primary); }
-  
-  .kpi .num{font-weight:700; font-size:1.1rem}
-
-  /* ======= PANELS & CARDS ======= */
-  .card{background:var(--bg); padding:12px; border-radius:8px; box-shadow: 0 1px 0 rgba(0,0,0,0.02);}
-  [data-theme="high-contrast"] .card { border: 1px solid var(--muted); }
-  
-  .grid{display:grid; gap:12px}
-  .two-col{grid-template-columns: 1fr 340px}
-  .full{grid-template-columns:1fr}
-
-  /* ======= FORMS (FIXED DROPDOWNS) ======= */
-  label{display:block; font-size:0.9rem; margin-bottom:6px}
-  
-  /* Stylizacja Inputów i Selectów */
-  input[type="text"], input[type="password"], select {
-    width: 100%; 
-    padding: 8px; 
-    border-radius: 6px; 
-    
-    /* Używamy zmiennych zdefiniowanych w root/themes */
-    background-color: var(--input-bg); 
-    color: var(--text);
-    border: 1px solid var(--input-border);
-  }
-
-  /* Fix dla opcji wewnątrz dropdowna - kluczowe dla spójności */
-  select option {
-      background-color: var(--bg);
-      color: var(--text);
-  }
-
-  input:focus, select:focus{
-    box-shadow:var(--focus); 
-    outline:none;
-    border-color: var(--primary);
-  }
-  .form-row{margin-bottom:10px}
-
-  /* ======= TABLE ======= */
-  table{width:100%; border-collapse:collapse; margin-top:8px}
-  th,td{padding:8px; text-align:left; border-bottom:1px solid #e6eef8}
-  [data-theme="high-contrast"] th, [data-theme="high-contrast"] td { border-bottom: 1px solid var(--muted); }
-  
-  th{font-weight:700; background:transparent; position:sticky; top:0; backdrop-filter: blur(4px)}
-  .table-wrap{overflow:auto; max-height:320px; border-radius:8px}
-
-  /* ======= CHART ======= */
-  .chart-area{padding:8px}
-  .chart-legend{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; font-size:0.9rem}
-
-  /* ======= MODALS / TOASTS ======= */
-  .modal{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.35); z-index:60}
-  .modal .dialog{width:90%; max-width:720px; background:var(--bg); padding:16px; border-radius:8px}
-  [data-theme="high-contrast"] .modal .dialog { border: 2px solid var(--primary); background: #000; }
-
-  .toast{position:fixed; right:18px; bottom:18px; background:var(--primary); color:var(--btn-text); padding:10px 14px; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.15)}
-
-  /* ======= ACCESSIBILITY HINTS ======= */
-  [role="status"]{position:relative}
-  .visually-hidden{position:absolute!important; height:1px;width:1px; overflow:hidden; clip:rect(1px,1px,1px,1px); white-space:nowrap}
-  .error{color:var(--danger); font-weight:700}
-  .muted{color:var(--muted); font-size:0.9rem}
-  .small{font-size:0.85rem}
-
-  /* ======= RESPONSIVE ======= */
-  @media (max-width:980px){
-    .app{grid-template-columns:1fr; padding-bottom:40px}
-    nav.sidebar{height:auto; display:flex; overflow-x:auto}
-  }
-</style>
 </head>
 <body data-theme="light">
 
@@ -480,15 +259,15 @@ const currentUser = localStorage.getItem('kallos_user');
 document.getElementById('displayUsername').textContent = currentUser || 'Gość';
 
 document.getElementById('logoutBtn').addEventListener('click', () => {
-  localStorage.removeItem('kallos_user');
-  window.location.href = 'kallos-login.html?logout=true';
+  localStorage.removeItem('kallos_user');
+  window.location.href = 'kallos-login.html?logout=true';
 });
 
 /* PONIŻEJ PEŁNA LOGIKA APLIKACJI (IMPORT, CHARTY, ETC) */
 const state = {
-  view: 'dashboard',
-  data: [], 
-  users: [ {login:'admin', role:'Administrator', last:'2025-12-19'} ]
+  view: 'dashboard',
+  data: [], 
+  users: [ {login:'admin', role:'Administrator', last:'2025-12-19'} ]
 };
 
 /* ======= UTILITIES ======= */
@@ -496,337 +275,337 @@ function $(sel,root=document) { return root.querySelector(sel) }
 function $all(sel,root=document){ return Array.from(root.querySelectorAll(sel)) }
 function setStatus(msg){ const s=$('#status'); s.textContent=msg; s.classList.remove('visually-hidden'); setTimeout(()=>s.classList.add('visually-hidden'),3000) }
 function showToast(msg, opts={}) {
-  const root = document.getElementById('toast-root');
-  const el = document.createElement('div'); el.className='toast'; el.textContent=msg;
-  root.appendChild(el);
-  setTimeout(()=>el.remove(), 3500);
+  const root = document.getElementById('toast-root');
+  const el = document.createElement('div'); el.className='toast'; el.textContent=msg;
+  root.appendChild(el);
+  setTimeout(()=>el.remove(), 3500);
 }
 /* keyboard: focus main when view changes */
 function focusMain(){ $('#main-content').focus() }
 
-/* ======= THEME SWITCH ======= */
+/* ======= THEME SWITCH - POPRAWIONA LOGIKA ======= */
 const themeSelect = $('#theme-select');
 // 1. Ustaw select na wartość z pamięci (żeby pokazywał dobrą opcję)
 themeSelect.value = localStorage.getItem('kallos_theme') || 'light';
 
 // 2. Przy zmianie - zapisz w pamięci
 themeSelect.addEventListener('change', e=>{
-  const newTheme = e.target.value;
-  // Ustawiamy atrybut na <html> (documentElement), nie na body, to lepsza praktyka
-  document.documentElement.setAttribute('data-theme', newTheme);
-  localStorage.setItem('kallos_theme', newTheme);
+  const newTheme = e.target.value;
+  // Ustawiamy atrybut na <html> (documentElement), nie na body, to lepsza praktyka
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('kallos_theme', newTheme);
 });
 
 /* ======= NAVIGATION ======= */
 $all('nav.sidebar button').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    $all('nav.sidebar button').forEach(b=>b.removeAttribute('aria-current'));
-    btn.setAttribute('aria-current','true');
-    showView(btn.dataset.view);
-  });
+  btn.addEventListener('click', ()=>{
+    $all('nav.sidebar button').forEach(b=>b.removeAttribute('aria-current'));
+    btn.setAttribute('aria-current','true');
+    showView(btn.dataset.view);
+  });
 });
 function showView(name){
-  state.view=name;
-  $all('main.content .view').forEach(v=>{
-    if (v.id === 'view-' + name) { v.style.display='block'; v.setAttribute('aria-hidden','false') }
-    else { v.style.display='none'; v.setAttribute('aria-hidden','true') }
-  });
-  focusMain();
+  state.view=name;
+  $all('main.content .view').forEach(v=>{
+    if (v.id === 'view-' + name) { v.style.display='block'; v.setAttribute('aria-hidden','false') }
+    else { v.style.display='none'; v.setAttribute('aria-hidden','true') }
+  });
+  focusMain();
 }
 
 /* ======= QUICK IMPORT BUTTON (shortcut to view) ======= */
 $('#quick-import').addEventListener('click', ()=>{
-  document.querySelector('nav.sidebar button[data-view="import"]').click();
-  $('#file-input').focus();
+  document.querySelector('nav.sidebar button[data-view="import"]').click();
+  $('#file-input').focus();
 });
 
 /* ======= IMPORT: handle file selection, preview, map ======= */
 let lastHeaders = [];
 $('#file-input').addEventListener('change', async (e)=>{
-  const file = e.target.files[0];
-  if (!file) return;
-  const text = await file.text();
-  const sep = text.includes(';') ? ';' : ',';
-  const lines = text.split(/\r?\n/).filter(Boolean);
-  if (lines.length === 0) { alert('Plik pusty'); return; }
-  lastHeaders = lines[0].split(sep).map(h=>h.trim());
-  
-  const mapArea = $('#map-area'); mapArea.style.display='block';
-  const mapRows = $('#map-rows'); mapRows.innerHTML = '';
-  const required = ['name','agency','grade','salary','start_date'];
-  required.forEach(req=>{
-    const row = document.createElement('div');
-    row.className='form-row';
-    row.innerHTML = `<label>${req} <span class="muted small">(wymagane)</span></label>
-      <select data-target="${req}" aria-label="Mapuj ${req}">
-        <option value="">-- wybierz kolumnę --</option>
-        ${lastHeaders.map(h=>`<option value="${h}">${h}</option>`).join('')}
-      </select>`;
-    mapRows.appendChild(row);
-  });
+  const file = e.target.files[0];
+  if (!file) return;
+  const text = await file.text();
+  const sep = text.includes(';') ? ';' : ',';
+  const lines = text.split(/\r?\n/).filter(Boolean);
+  if (lines.length === 0) { alert('Plik pusty'); return; }
+  lastHeaders = lines[0].split(sep).map(h=>h.trim());
+  
+  const mapArea = $('#map-area'); mapArea.style.display='block';
+  const mapRows = $('#map-rows'); mapRows.innerHTML = '';
+  const required = ['name','agency','grade','salary','start_date'];
+  required.forEach(req=>{
+    const row = document.createElement('div');
+    row.className='form-row';
+    row.innerHTML = `<label>${req} <span class="muted small">(wymagane)</span></label>
+      <select data-target="${req}" aria-label="Mapuj ${req}">
+        <option value="">-- wybierz kolumnę --</option>
+        ${lastHeaders.map(h=>`<option value="${h}">${h}</option>`).join('')}
+      </select>`;
+    mapRows.appendChild(row);
+  });
 
-  const previewWrap = $('#preview-area'); previewWrap.style.display='block';
-  const previewTable = document.createElement('table'); previewTable.style.width='100%';
-  const th = document.createElement('thead'); th.innerHTML = '<tr>' + lastHeaders.map(h=>`<th>${h}</th>`).join('') + '</tr>';
-  previewTable.appendChild(th);
-  const tb = document.createElement('tbody');
-  lines.slice(1,6).forEach(l=>{
-    const cols = l.split(sep);
-    tb.appendChild(document.createElement('tr')).innerHTML = cols.map(c=>`<td>${c}</td>`).join('');
-  });
-  previewWrap.querySelector('#preview-table-wrap').innerHTML=''; previewWrap.querySelector('#preview-table-wrap').appendChild(previewTable);
+  const previewWrap = $('#preview-area'); previewWrap.style.display='block';
+  const previewTable = document.createElement('table'); previewTable.style.width='100%';
+  const th = document.createElement('thead'); th.innerHTML = '<tr>' + lastHeaders.map(h=>`<th>${h}</th>`).join('') + '</tr>';
+  previewTable.appendChild(th);
+  const tb = document.createElement('tbody');
+  lines.slice(1,6).forEach(l=>{
+    const cols = l.split(sep);
+    tb.appendChild(document.createElement('tr')).innerHTML = cols.map(c=>`<td>${c}</td>`).join('');
+  });
+  previewWrap.querySelector('#preview-table-wrap').innerHTML=''; previewWrap.querySelector('#preview-table-wrap').appendChild(previewTable);
 });
 
 $('#start-import').addEventListener('click', ()=>{
-  const selects = Array.from(document.querySelectorAll('#map-rows select'));
-  const mapping = {};
-  for (const sel of selects){
-    if (!sel.value) {
-      alert('Proszę zmapować wszystkie wymagane kolumny.');
-      sel.focus();
-      return;
-    }
-    mapping[sel.dataset.target]=sel.value;
-  }
-  const fileInput = $('#file-input');
-  const file = fileInput.files[0];
-  if (!file) { alert('Brak pliku'); return; }
-  file.text().then(text=>{
-    const sep = text.includes(';') ? ';' : ',';
-    const lines = text.split(/\r?\n/).filter(Boolean);
-    const headers = lines[0].split(sep).map(h=>h.trim());
-    const rows = lines.slice(1).map(line => {
-      const cols = line.split(sep);
-      const obj = {};
-      for (const key in mapping) {
-        const colName = mapping[key];
-        const idx = headers.indexOf(colName);
-        obj[key] = idx>=0 ? (cols[idx]||'').trim() : '';
-      }
-      obj.salary = parseFloat( (obj.salary || '0').replace(/[^\d.,-]/g,'').replace(',','.') ) || 0;
-      return obj;
-    }).filter(r=>r.name && r.agency);
-    
-    state.data = state.data.concat(rows);
-    updateKPI();
-    populateFilters();
-    renderTable();
-    showToast('Import zakończony: ' + rows.length + ' rekordów');
-    $('#map-area').style.display='none';
-    $('#preview-area').style.display='none';
-    fileInput.value='';
-    addLog(`Import: ${rows.length} rekordów`);
-  });
+  const selects = Array.from(document.querySelectorAll('#map-rows select'));
+  const mapping = {};
+  for (const sel of selects){
+    if (!sel.value) {
+      alert('Proszę zmapować wszystkie wymagane kolumny.');
+      sel.focus();
+      return;
+    }
+    mapping[sel.dataset.target]=sel.value;
+  }
+  const fileInput = $('#file-input');
+  const file = fileInput.files[0];
+  if (!file) { alert('Brak pliku'); return; }
+  file.text().then(text=>{
+    const sep = text.includes(';') ? ';' : ',';
+    const lines = text.split(/\r?\n/).filter(Boolean);
+    const headers = lines[0].split(sep).map(h=>h.trim());
+    const rows = lines.slice(1).map(line => {
+      const cols = line.split(sep);
+      const obj = {};
+      for (const key in mapping) {
+        const colName = mapping[key];
+        const idx = headers.indexOf(colName);
+        obj[key] = idx>=0 ? (cols[idx]||'').trim() : '';
+      }
+      obj.salary = parseFloat( (obj.salary || '0').replace(/[^\d.,-]/g,'').replace(',','.') ) || 0;
+      return obj;
+    }).filter(r=>r.name && r.agency);
+    
+    state.data = state.data.concat(rows);
+    updateKPI();
+    populateFilters();
+    renderTable();
+    showToast('Import zakończony: ' + rows.length + ' rekordów');
+    $('#map-area').style.display='none';
+    $('#preview-area').style.display='none';
+    fileInput.value='';
+    addLog(`Import: ${rows.length} rekordów`);
+  });
 });
 
 $('#cancel-import').addEventListener('click', ()=>{
-  $('#map-area').style.display='none';
-  $('#preview-area').style.display='none';
-  $('#file-input').value='';
+  $('#map-area').style.display='none';
+  $('#preview-area').style.display='none';
+  $('#file-input').value='';
 });
 
 /* ======= TABLE RENDERING ======= */
 function renderTable(){
-  const tbody = $('#table-body'); tbody.innerHTML='';
-  const q = $('#search-input').value.trim().toLowerCase();
-  let visible = state.data;
-  if (q) visible = visible.filter(r => (r.name||'').toLowerCase().includes(q) || (r.agency||'').toLowerCase().includes(q));
-  visible.forEach((row,i)=>{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td><input data-idx="${i}" class="row-check" type="checkbox" aria-label="Zaznacz rekord ${row.name}"></td>
-      <td>${escapeHtml(row.name)}</td>
-      <td>${escapeHtml(row.agency)}</td>
-      <td>${escapeHtml(row.grade)}</td>
-      <td>${row.salary.toLocaleString('pl-PL', {style:'currency', currency:'PLN', maximumFractionDigits:0})}</td>
-      <td>${escapeHtml(row.start_date)}</td>`;
-    tbody.appendChild(tr);
-  });
-  $('#kpi-records').textContent = state.data.length;
-  attachRowCheckboxes();
+  const tbody = $('#table-body'); tbody.innerHTML='';
+  const q = $('#search-input').value.trim().toLowerCase();
+  let visible = state.data;
+  if (q) visible = visible.filter(r => (r.name||'').toLowerCase().includes(q) || (r.agency||'').toLowerCase().includes(q));
+  visible.forEach((row,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td><input data-idx="${i}" class="row-check" type="checkbox" aria-label="Zaznacz rekord ${row.name}"></td>
+      <td>${escapeHtml(row.name)}</td>
+      <td>${escapeHtml(row.agency)}</td>
+      <td>${escapeHtml(row.grade)}</td>
+      <td>${row.salary.toLocaleString('pl-PL', {style:'currency', currency:'PLN', maximumFractionDigits:0})}</td>
+      <td>${escapeHtml(row.start_date)}</td>`;
+    tbody.appendChild(tr);
+  });
+  $('#kpi-records').textContent = state.data.length;
+  attachRowCheckboxes();
 }
 function escapeHtml(s){ if(!s) return ''; return s.replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 
 $('#search-input').addEventListener('input', ()=> renderTable());
 
 $('#select-all').addEventListener('change', (e)=>{
-  const checks = $all('.row-check');
-  checks.forEach(c=>c.checked = e.target.checked);
-  updateSelectedCount();
+  const checks = $all('.row-check');
+  checks.forEach(c=>c.checked = e.target.checked);
+  updateSelectedCount();
 });
 function attachRowCheckboxes(){
-  $all('.row-check').forEach(cb=>{
-    cb.addEventListener('change', updateSelectedCount);
-  });
+  $all('.row-check').forEach(cb=>{
+    cb.addEventListener('change', updateSelectedCount);
+  });
 }
 function updateSelectedCount(){
-  const count = $all('.row-check').filter(c=>c.checked).length;
-  $('#selected-count').textContent = count;
+  const count = $all('.row-check').filter(c=>c.checked).length;
+  $('#selected-count').textContent = count;
 }
 
 $('#export-csv').addEventListener('click', ()=>{
-  if (state.data.length===0) { alert('Brak danych do eksportu'); return; }
-  const csv = toCSV(state.data);
-  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href=url; a.download='kallos_export.csv'; a.click(); URL.revokeObjectURL(url);
-  showToast('Eksport CSV wygenerowany');
+  if (state.data.length===0) { alert('Brak danych do eksportu'); return; }
+  const csv = toCSV(state.data);
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='kallos_export.csv'; a.click(); URL.revokeObjectURL(url);
+  showToast('Eksport CSV wygenerowany');
 });
 
 function toCSV(arr){
-  if (!arr.length) return '';
-  const cols = Object.keys(arr[0]);
-  const rows = [cols.join(',')].concat(arr.map(r=>cols.map(c=>`"${String(r[c]||'').replace(/"/g,'""')}"`).join(',')));
-  return rows.join('\n');
+  if (!arr.length) return '';
+  const cols = Object.keys(arr[0]);
+  const rows = [cols.join(',')].concat(arr.map(r=>cols.map(c=>`"${String(r[c]||'').replace(/"/g,'""')}"`).join(',')));
+  return rows.join('\n');
 }
 
 /* ======= CHART ======= */
 function generateChart(groupBy='grade'){
-  const groups = {};
-  state.data.forEach(r=>{
-    const key = r[groupBy] || '(brak)';
-    if (!groups[key]) groups[key] = {sum:0,count:0};
-    groups[key].sum += (r.salary||0); groups[key].count++;
-  });
-  const items = Object.entries(groups).map(([k,v])=>({k,avg: v.count ? v.sum/v.count : 0, count:v.count}))
-    .sort((a,b)=>b.avg-a.avg);
-  renderSVGChart('#mini-chart', items, {height:100, showLabels:false});
-  renderSVGChart('#chart-wrap', items, {height:260, showLabels:true});
+  const groups = {};
+  state.data.forEach(r=>{
+    const key = r[groupBy] || '(brak)';
+    if (!groups[key]) groups[key] = {sum:0,count:0};
+    groups[key].sum += (r.salary||0); groups[key].count++;
+  });
+  const items = Object.entries(groups).map(([k,v])=>({k,avg: v.count ? v.sum/v.count : 0, count:v.count}))
+    .sort((a,b)=>b.avg-a.avg);
+  renderSVGChart('#mini-chart', items, {height:100, showLabels:false});
+  renderSVGChart('#chart-wrap', items, {height:260, showLabels:true});
 }
 
 function renderSVGChart(selector, items, opts={height:200, showLabels:true}){
-  const wrap = document.querySelector(selector);
-  wrap.innerHTML='';
-  if (!items.length) { wrap.innerHTML = '<div class="muted">Brak danych</div>'; return; }
-  const max = Math.max(...items.map(i=>i.avg));
-  const svgNS = 'http://www.w3.org/2000/svg';
-  const svg = document.createElementNS(svgNS,'svg');
-  svg.setAttribute('width','100%'); svg.setAttribute('height', opts.height);
-  const pad = 36;
-  const width = wrap.clientWidth || 600;
-  const barW = Math.max(20, Math.floor((width - pad*2)/items.length) - 8);
-  items.forEach((it, idx)=>{
-    const x = pad + idx*(barW+8);
-    const h = max ? ( (it.avg / max) * (opts.height - 80) ) : 0;
-    const y = opts.height - h - 30;
-    const rect = document.createElementNS(svgNS,'rect');
-    rect.setAttribute('x', x);
-    rect.setAttribute('y', y);
-    rect.setAttribute('width', barW);
-    rect.setAttribute('height', h);
-    rect.setAttribute('fill', 'url(#g'+idx+')'); 
-    rect.setAttribute('fill', 'var(--primary)'); 
-    rect.setAttribute('rx',4);
-    rect.setAttribute('role','img');
-    rect.setAttribute('aria-label', `${it.k}: średnio ${Math.round(it.avg)} PLN, ${it.count} rekordy`);
-    svg.appendChild(rect);
-    if (opts.showLabels){
-      const text = document.createElementNS(svgNS,'text');
-      text.setAttribute('x', x + barW/2);
-      text.setAttribute('y', y - 6);
-      text.setAttribute('text-anchor','middle');
-      text.setAttribute('font-size','12');
-      text.setAttribute('fill', 'var(--text)');
-      text.textContent = Math.round(it.avg).toLocaleString('pl-PL') + ' PLN';
-      svg.appendChild(text);
+  const wrap = document.querySelector(selector);
+  wrap.innerHTML='';
+  if (!items.length) { wrap.innerHTML = '<div class="muted">Brak danych</div>'; return; }
+  const max = Math.max(...items.map(i=>i.avg));
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(svgNS,'svg');
+  svg.setAttribute('width','100%'); svg.setAttribute('height', opts.height);
+  const pad = 36;
+  const width = wrap.clientWidth || 600;
+  const barW = Math.max(20, Math.floor((width - pad*2)/items.length) - 8);
+  items.forEach((it, idx)=>{
+    const x = pad + idx*(barW+8);
+    const h = max ? ( (it.avg / max) * (opts.height - 80) ) : 0;
+    const y = opts.height - h - 30;
+    const rect = document.createElementNS(svgNS,'rect');
+    rect.setAttribute('x', x);
+    rect.setAttribute('y', y);
+    rect.setAttribute('width', barW);
+    rect.setAttribute('height', h);
+    rect.setAttribute('fill', 'url(#g'+idx+')'); 
+    rect.setAttribute('fill', 'var(--primary)'); 
+    rect.setAttribute('rx',4);
+    rect.setAttribute('role','img');
+    rect.setAttribute('aria-label', `${it.k}: średnio ${Math.round(it.avg)} PLN, ${it.count} rekordy`);
+    svg.appendChild(rect);
+    if (opts.showLabels){
+      const text = document.createElementNS(svgNS,'text');
+      text.setAttribute('x', x + barW/2);
+      text.setAttribute('y', y - 6);
+      text.setAttribute('text-anchor','middle');
+      text.setAttribute('font-size','12');
+      text.setAttribute('fill', 'var(--text)');
+      text.textContent = Math.round(it.avg).toLocaleString('pl-PL') + ' PLN';
+      svg.appendChild(text);
 
-      const lab = document.createElementNS(svgNS,'text');
-      lab.setAttribute('x', x + barW/2);
-      lab.setAttribute('y', opts.height - 10);
-      lab.setAttribute('text-anchor','middle');
-      lab.setAttribute('font-size','11');
-      lab.setAttribute('fill','var(--muted)');
-      lab.textContent = it.k;
-      svg.appendChild(lab);
-    }
-  });
-  wrap.appendChild(svg);
+      const lab = document.createElementNS(svgNS,'text');
+      lab.setAttribute('x', x + barW/2);
+      lab.setAttribute('y', opts.height - 10);
+      lab.setAttribute('text-anchor','middle');
+      lab.setAttribute('font-size','11');
+      lab.setAttribute('fill','var(--muted)');
+      lab.textContent = it.k;
+      svg.appendChild(lab);
+    }
+  });
+  wrap.appendChild(svg);
 }
 
 $('#gen-chart').addEventListener('click', ()=>{
-  generateChart($('#vis-group').value);
+  generateChart($('#vis-group').value);
 });
 
 /* ======= ANALYSIS ======= */
 $('#sim-pct').addEventListener('input', (e)=> $('#sim-value').textContent = e.target.value);
 $('#run-sim').addEventListener('click', ()=>{
-  const pct = parseFloat($('#sim-pct').value) || 0;
-  const base = state.data.reduce((s,r)=>s + (r.salary||0),0);
-  const newTotal = base * (1 + pct/100);
-  const diff = newTotal - base;
-  $('#sim-result').textContent = `Obecny budżet: ${Math.round(base).toLocaleString('pl-PL')} PLN. Po podwyżce: ${Math.round(newTotal).toLocaleString('pl-PL')} PLN. Zmiana: ${Math.round(diff).toLocaleString('pl-PL')} PLN.`;
-  addLog(`Symulacja: +${pct}% -> ${Math.round(diff)} PLN`);
+  const pct = parseFloat($('#sim-pct').value) || 0;
+  const base = state.data.reduce((s,r)=>s + (r.salary||0),0);
+  const newTotal = base * (1 + pct/100);
+  const diff = newTotal - base;
+  $('#sim-result').textContent = `Obecny budżet: ${Math.round(base).toLocaleString('pl-PL')} PLN. Po podwyżce: ${Math.round(newTotal).toLocaleString('pl-PL')} PLN. Zmiana: ${Math.round(diff).toLocaleString('pl-PL')} PLN.`;
+  addLog(`Symulacja: +${pct}% -> ${Math.round(diff)} PLN`);
 });
 
 $('#generate-report').addEventListener('click', ()=>{
-  const fmt = $('#report-format').value;
-  if (fmt === 'csv'){
-    const csv = toCSV(state.data);
-    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'kallos_report.csv'; a.click();
-    showToast('Raport CSV wygenerowany lokalnie');
-  } else {
-    const w = window.open('', '_blank');
-    w.document.write('<pre>' + escapeHtml(JSON.stringify(state.data.slice(0,200), null, 2)) + '</pre>');
-    w.document.close();
-    w.print();
-  }
+  const fmt = $('#report-format').value;
+  if (fmt === 'csv'){
+    const csv = toCSV(state.data);
+    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'kallos_report.csv'; a.click();
+    showToast('Raport CSV wygenerowany lokalnie');
+  } else {
+    const w = window.open('', '_blank');
+    w.document.write('<pre>' + escapeHtml(JSON.stringify(state.data.slice(0,200), null, 2)) + '</pre>');
+    w.document.close();
+    w.print();
+  }
 });
 
 /* ======= ADMIN ======= */
 function renderAdminUsers(){
-  const tbody = $('#admin-users'); tbody.innerHTML='';
-  state.users.forEach((u,i)=>{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${u.login}</td><td>${u.role}</td><td>${u.last}</td><td>
-      <button data-idx="${i}" class="btn small edit-user">Edytuj</button>
-      <button data-idx="${i}" class="small" style="margin-left:6px">Usuń</button>
-    </td>`;
-    tbody.appendChild(tr);
-  });
+  const tbody = $('#admin-users'); tbody.innerHTML='';
+  state.users.forEach((u,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${u.login}</td><td>${u.role}</td><td>${u.last}</td><td>
+      <button data-idx="${i}" class="btn small edit-user">Edytuj</button>
+      <button data-idx="${i}" class="small" style="margin-left:6px">Usuń</button>
+    </td>`;
+    tbody.appendChild(tr);
+  });
 }
 $('#create-user').addEventListener('click', ()=>{
-  const login = prompt('Login nowego konta:','user1');
-  if (!login) return;
-  state.users.push({login, role:'User', last:'-'});
-  renderAdminUsers();
-  showToast('Utworzono konto: '+login);
+  const login = prompt('Login nowego konta:','user1');
+  if (!login) return;
+  state.users.push({login, role:'User', last:'-'});
+  renderAdminUsers();
+  showToast('Utworzono konto: '+login);
 });
 renderAdminUsers();
 
 /* ======= HELPERS ======= */
 function updateKPI(){
-  $('#kpi-records').textContent = state.data.length;
-  const avg = state.data.length ? Math.round(state.data.reduce((s,r)=>s + (r.salary||0),0) / state.data.length) : '—';
-  $('#kpi-avg').textContent = (avg === '—') ? '—' : avg.toLocaleString('pl-PL') + ' PLN';
-  $('#kpi-last').textContent = new Date().toLocaleString('pl-PL');
+  $('#kpi-records').textContent = state.data.length;
+  const avg = state.data.length ? Math.round(state.data.reduce((s,r)=>s + (r.salary||0),0) / state.data.length) : '—';
+  $('#kpi-avg').textContent = (avg === '—') ? '—' : avg.toLocaleString('pl-PL') + ' PLN';
+  $('#kpi-last').textContent = new Date().toLocaleString('pl-PL');
 }
 function populateFilters(){
-  const agencies = Array.from(new Set(state.data.map(d=>d.agency).filter(Boolean))).sort();
-  const sel = $('#filter-agency'); sel.innerHTML = '<option value="">Wszystkie</option>' + agencies.map(a=>`<option>${a}</option>`).join('');
-  const years = Array.from(new Set(state.data.map(d=> (d.start_date||'').slice(0,4) ).filter(Boolean))).sort().reverse();
-  $('#filter-year').innerHTML = '<option value="">Wszystkie</option>' + years.map(y=>`<option>${y}</option>`).join('');
+  const agencies = Array.from(new Set(state.data.map(d=>d.agency).filter(Boolean))).sort();
+  const sel = $('#filter-agency'); sel.innerHTML = '<option value="">Wszystkie</option>' + agencies.map(a=>`<option>${a}</option>`).join('');
+  const years = Array.from(new Set(state.data.map(d=> (d.start_date||'').slice(0,4) ).filter(Boolean))).sort().reverse();
+  $('#filter-year').innerHTML = '<option value="">Wszystkie</option>' + years.map(y=>`<option>${y}</option>`).join('');
 }
 function addLog(txt){
-  const ul = $('#log-list');
-  const li = document.createElement('li'); li.textContent = `[${new Date().toLocaleTimeString('pl-PL')}] ${txt}`;
-  ul.insertBefore(li, ul.firstChild);
+  const ul = $('#log-list');
+  const li = document.createElement('li'); li.textContent = `[${new Date().toLocaleTimeString('pl-PL')}] ${txt}`;
+  ul.insertBefore(li, ul.firstChild);
 }
 
 /* initial demo dataset */
 (function seed(){
-  const demo = [
-    {name:'Anna Kowalska', agency:'Dept. Zdrowia', grade:'G5', salary:6800, start_date:'2019-06-02'},
-    {name:'Jan Nowak', agency:'Dept. Finansów', grade:'G7', salary:9200, start_date:'2015-08-15'},
-    {name:'Maria Wiśniewska', agency:'Dept. Zdrowia', grade:'G5', salary:7000, start_date:'2020-01-10'},
-    {name:'Piotr Zieliński', agency:'Dept. Edukacji', grade:'G4', salary:5400, start_date:'2021-03-01'},
-    {name:'Katarzyna Malin', agency:'Dept. Finansów', grade:'G6', salary:8100, start_date:'2018-11-30'}
-  ];
-  state.data = state.data.concat(demo);
-  updateKPI(); populateFilters(); renderTable(); generateChart('grade');
+  const demo = [
+    {name:'Anna Kowalska', agency:'Dept. Zdrowia', grade:'G5', salary:6800, start_date:'2019-06-02'},
+    {name:'Jan Nowak', agency:'Dept. Finansów', grade:'G7', salary:9200, start_date:'2015-08-15'},
+    {name:'Maria Wiśniewska', agency:'Dept. Zdrowia', grade:'G5', salary:7000, start_date:'2020-01-10'},
+    {name:'Piotr Zieliński', agency:'Dept. Edukacji', grade:'G4', salary:5400, start_date:'2021-03-01'},
+    {name:'Katarzyna Malin', agency:'Dept. Finansów', grade:'G6', salary:8100, start_date:'2018-11-30'}
+  ];
+  state.data = state.data.concat(demo);
+  updateKPI(); populateFilters(); renderTable(); generateChart('grade');
 })();
 
 document.querySelector('.skip-link').addEventListener('click', (e)=>{
-  $('#main-content').focus();
+  $('#main-content').focus();
 });
 window._Kallos = {state, generateChart, renderTable};
 </script>

@@ -4,135 +4,14 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Kallos — Logowanie</title>
+<link rel="stylesheet" href="style.css">
 <script>
-  // SCRIPT: Natychmiastowe nałożenie motywu przed renderowaniem (zapobiega mignięciu)
+  // Wczytaj motyw z pamięci
   const savedTheme = localStorage.getItem('kallos_theme') || 'light';
   document.documentElement.setAttribute('data-theme', savedTheme);
 </script>
-<style>
-  /* ======= DESIGN TOKENS (Zgodne z Dashboardem) ======= */
-  :root{
-    --bg:#ffffff;
-    --surface:#f6f7f9;
-    --text:#0b1720;
-    --muted:#536070;
-    --primary:#0b6df2;
-    --accent:#06a58a;
-    --radius:10px;
-    --focus: 3px solid #ffbf47;
-    
-    /* Zmienne formularzy i przycisków */
-    --btn-text: #ffffff;
-    --input-bg: #ffffff;
-    --input-border: #ccd7e6;
-
-    --btn-accent-text: #ffffff;
-  }
-
-  [data-theme="dark"]{
-    --bg:#0b1116;
-    --surface:#0f1720;
-    --text:#e6eef8;
-    --muted:#9fb0c9;
-    --primary:#5ea8ff;
-    --accent:#06a58a;
-    
-    --btn-text: #ffffff;
-    --input-bg: #0b1116;
-    --input-border: #2c3e50;
-
-    --btn-accent-text: #ffffff;
-  }
-
-  /* High Contrast */
-  [data-theme="high-contrast"]{
-    --bg:#000000;
-    --surface:#000000;
-    --text:#ffffff;
-    --muted:#ffffff;
-    --primary:#ffff00;
-    --accent:#00ff00;
-    --focus: 3px dashed #ffff00;
-    
-    --btn-text: #003366; /* Ciemny niebieski na żółtym */
-    --input-bg: #000000;
-    --input-border: #ffff00;
-
-    --btn-accent-text: #000000;
-  }
-
-  body {
-    font-family: Inter, system-ui, -apple-system, sans-serif;
-    margin: 0; background: var(--bg); color: var(--text);
-    display: flex; align-items: center; justify-content: center;
-    min-height: 100vh; padding: 16px; box-sizing: border-box;
-  }
-
-  .login-card {
-    background: var(--surface);
-    padding: 2.5rem 2rem;
-    border-radius: var(--radius);
-    width: 100%;
-    max-width: 400px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-    text-align: center;
-  }
-  /* Ramka w High Contrast */
-  [data-theme="high-contrast"] .login-card { border: 2px solid var(--primary); }
-
-  .logo-area { margin-bottom: 1.5rem; display: block; }
-  .logo-img-large {
-    width: 100%; height: auto; display: block;
-    object-fit: contain; max-height: 200px;
-    border-radius: var(--radius);
-  }
-
-  h1 { margin: 0 0 0.5rem 0; font-size: 1.5rem; }
-  p.subtitle { margin: 0 0 1.5rem 0; color: var(--muted); font-size: 0.9rem; }
-
-  /* Formularz */
-  .form-group { margin-bottom: 1rem; text-align: left; }
-  label { display: block; font-size: 0.9rem; margin-bottom: 6px; font-weight: 600; }
-  
-  input {
-    width: 100%; padding: 10px; border-radius: 6px;
-    background: var(--input-bg); 
-    color: var(--text);
-    border: 1px solid var(--input-border);
-    box-sizing: border-box;
-  }
-  input:focus { outline: none; box-shadow: var(--focus); border-color: var(--primary); }
-
-  button.btn-primary {
-    background: var(--primary); 
-    color: var(--btn-text); /* Użycie zmiennej dla kontrastu */
-    border: 0; padding: 12px; border-radius: 8px; width: 100%;
-    font-weight: 600; cursor: pointer; font-size: 1rem;
-    margin-top: 10px;
-  }
-  button:focus { outline: none; box-shadow: var(--focus); }
-
-  .alert-success {
-    background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0;
-    padding: 12px; border-radius: 8px; margin-bottom: 1.5rem;
-    font-size: 0.9rem; display: none;
-  }
-
-  /* Overlay */
-  .auth-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.6);
-    display: none; align-items: center; justify-content: center;
-    z-index: 100; backdrop-filter: blur(2px);
-  }
-  .auth-modal {
-    background: var(--bg); padding: 2rem; border-radius: var(--radius);
-    max-width: 350px; text-align: center; width: 90%;
-    border: 1px solid #e5e7eb;
-  }
-  [data-theme="high-contrast"] .auth-modal { border: 2px solid var(--primary); background: #000; }
-</style>
 </head>
-<body>
+<body class="login-page">
 
   <main class="login-card">
     <div id="logout-msg" class="alert-success" role="alert">
@@ -169,15 +48,12 @@
   </div>
 
   <script>
-    // 1. Sprawdź komunikaty
     const params = new URLSearchParams(window.location.search);
     if (params.get('logout') === 'true') {
-      const msg = document.getElementById('logout-msg');
-      msg.style.display = 'block';
+      document.getElementById('logout-msg').style.display = 'block';
       window.history.replaceState({}, document.title, window.location.pathname);
     }
 
-    // 2. Logika formularza
     const form = document.getElementById('loginForm');
     const overlay = document.getElementById('authOverlay');
     const confirmBtn = document.getElementById('confirmIdentity');

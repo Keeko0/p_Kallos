@@ -1,0 +1,263 @@
+/* =========================================
+   1. DESIGN TOKENS & THEMES
+   ========================================= */
+:root {
+  --bg: #ffffff;
+  --surface: #f6f7f9;
+  --text: #0b1720;
+  --muted: #536070;
+  --primary: #0b6df2;
+  --accent: #06a58a;
+  --danger: #c53030;
+  --focus: 3px solid #ffbf47;
+  --radius: 10px;
+  --max-width: 1100px;
+
+  /* Zmienne dla tekstów na przyciskach i inputów */
+  --btn-text: #ffffff;
+  --btn-accent-text: #ffffff;
+  --input-bg: #ffffff;
+  --input-border: #ccd7e6;
+}
+
+[data-theme="dark"] {
+  --bg: #0b1116;
+  --surface: #0f1720;
+  --text: #e6eef8;
+  --muted: #9fb0c9;
+  --primary: #5ea8ff;
+ --accent: #06a58a;
+  --danger: #ff8b8b;
+  --focus: 3px solid #ffd46a;
+  
+  --btn-text: #ffffff;
+  --btn-accent-text: #ffffff;
+  --input-bg: #0b1116;
+  --input-border: #2c3e50;
+}
+
+[data-theme="high-contrast"] {
+  --bg: #000000;
+  --surface: #000000;
+  --text: #ffffff;
+  --muted: #ffffff;
+  --primary: #ffff00; /* Żółty */
+  --accent: #00ff00;  /* Jaskrawy zielony */
+  --danger: #ff0000;
+  --focus: 3px dashed #ffff00;
+
+  --btn-text: #003366;        /* Ciemny niebieski na żółtym */
+  --btn-accent-text: #000000; /* Czarny na zielonym */
+  --input-bg: #000000;
+  --input-border: #ffff00;
+}
+
+/* =========================================
+   2. GLOBAL RESET & BASE
+   ========================================= */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.35;
+  padding: 0 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Linki pomijające (Accessibility) */
+.skip-link {
+  position: absolute; left: -999px; top: auto; width: 1px; height: 1px; overflow: hidden;
+}
+.skip-link:focus {
+  left: 16px; top: 16px; width: auto; height: auto; padding: 8px;
+  background: var(--primary); color: var(--btn-text); border-radius: 6px; z-index: 999;
+}
+
+/* =========================================
+   3. FORMS & BUTTONS (SHARED)
+   ========================================= */
+label { display: block; font-size: 0.9rem; margin-bottom: 6px; font-weight: 600; }
+
+input[type="text"], input[type="password"], select, input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  background-color: var(--input-bg);
+  color: var(--text);
+  border: 1px solid var(--input-border);
+  box-sizing: border-box;
+}
+
+/* Fix dla dropdownów */
+select option { background-color: var(--bg); color: var(--text); }
+
+input:focus, select:focus {
+  box-shadow: var(--focus);
+  outline: none;
+  border-color: var(--primary);
+}
+
+.form-group, .form-row { margin-bottom: 1rem; }
+
+button, .btn, .btn-primary {
+  background: var(--primary);
+  color: var(--btn-text);
+  border: 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: opacity 0.2s;
+}
+
+button:hover, .btn:hover { opacity: 0.9; }
+button:focus, .btn:focus { outline: none; box-shadow: var(--focus); }
+
+/* Wariant Outline */
+button.btn-outline {
+  background: transparent;
+  border: 1px solid var(--muted);
+  color: var(--text);
+}
+[data-theme="high-contrast"] button.btn-outline {
+  border: 2px solid var(--primary);
+  color: var(--text);
+}
+
+/* =========================================
+   4. LOGIN PAGE STYLES
+   ========================================= */
+body.login-page {
+  display: flex; align-items: center; justify-content: center;
+}
+
+.login-card {
+  background: var(--surface);
+  padding: 2.5rem 2rem;
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  text-align: center;
+}
+[data-theme="high-contrast"] .login-card { border: 2px solid var(--primary); }
+
+.logo-area { margin-bottom: 1.5rem; display: block; }
+
+.logo-img-large {
+  width: 100%; height: auto; display: block;
+  object-fit: contain; max-height: 200px;
+  border-radius: var(--radius);
+}
+
+.login-card h1 { margin: 0 0 0.5rem 0; font-size: 1.5rem; }
+.login-card p.subtitle { margin: 0 0 1.5rem 0; color: var(--muted); font-size: 0.9rem; }
+.btn-primary { width: 100%; margin-top: 10px; padding: 12px; }
+
+.alert-success {
+  background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0;
+  padding: 12px; border-radius: 8px; margin-bottom: 1.5rem;
+  font-size: 0.9rem; display: none;
+}
+
+.auth-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  display: none; align-items: center; justify-content: center;
+  z-index: 100; backdrop-filter: blur(2px);
+}
+.auth-modal {
+  background: var(--bg); padding: 2rem; border-radius: var(--radius);
+  max-width: 350px; text-align: center; width: 90%;
+  border: 1px solid #e5e7eb;
+}
+[data-theme="high-contrast"] .auth-modal { border: 2px solid var(--primary); background: #000; }
+
+/* =========================================
+   5. DASHBOARD STYLES
+   ========================================= */
+.app {
+  max-width: var(--max-width);
+  margin: 18px auto;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+header.app-header {
+  grid-column: 1/-1;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 12px; background: var(--surface); border-radius: var(--radius);
+}
+[data-theme="high-contrast"] header.app-header { border: 1px solid var(--primary); }
+
+.brand { display: flex; gap: 12px; align-items: center; }
+.logo { height: 44px; width: auto; max-width: 150px; object-fit: contain; display: block; border-radius: 8px; }
+.controls { display: flex; gap: 12px; align-items: center; }
+
+.user-badge {
+  display: flex; flex-direction: column; align-items: flex-end;
+  font-size: 0.85rem; line-height: 1.2; text-align: right;
+}
+.user-badge strong { color: var(--primary); }
+
+nav.sidebar {
+  background: var(--surface); padding: 12px; border-radius: var(--radius);
+  height: calc(100vh - 160px); overflow: auto;
+}
+[data-theme="high-contrast"] nav.sidebar { border: 1px solid var(--muted); }
+
+.nav-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.nav-list button {
+  text-align: left; background: transparent; color: var(--text); padding: 10px; border-radius: 8px; border: 0; width: 100%;
+}
+.nav-list button[aria-current="true"] { background: linear-gradient(90deg, rgba(11,109,242,0.12), transparent); }
+[data-theme="high-contrast"] .nav-list button[aria-current="true"] { background: var(--primary); color: var(--btn-text); }
+
+main.content {
+  background: var(--surface); padding: 16px; border-radius: var(--radius); min-height: 60vh;
+}
+[data-theme="high-contrast"] main.content { border: 1px solid var(--muted); }
+
+.toolbar { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+.visually-hidden { position: absolute!important; height: 1px; width: 1px; overflow: hidden; clip: rect(1px,1px,1px,1px); white-space: nowrap; }
+.muted { color: var(--muted); font-size: 0.9rem; }
+.small { font-size: 0.85rem; }
+
+.card { background: var(--bg); padding: 12px; border-radius: 8px; box-shadow: 0 1px 0 rgba(0,0,0,0.02); }
+[data-theme="high-contrast"] .card { border: 1px solid var(--muted); }
+
+.grid { display: grid; gap: 12px; }
+.two-col { grid-template-columns: 1fr 340px; }
+.full { grid-template-columns: 1fr; }
+
+.kpi { display: flex; gap: 12px; align-items: center; background: linear-gradient(180deg, #fff0 0%, transparent 60%); padding: 8px 12px; border-radius: 8px; }
+[data-theme="high-contrast"] .kpi { border: 1px solid var(--primary); }
+.kpi .num { font-weight: 700; font-size: 1.1rem; }
+
+table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+th, td { padding: 8px; text-align: left; border-bottom: 1px solid #e6eef8; }
+[data-theme="high-contrast"] th, [data-theme="high-contrast"] td { border-bottom: 1px solid var(--muted); }
+th { font-weight: 700; background: transparent; position: sticky; top: 0; backdrop-filter: blur(4px); }
+.table-wrap { overflow: auto; max-height: 320px; border-radius: 8px; }
+
+.chart-area { padding: 8px; }
+.toast {
+  position: fixed; right: 18px; bottom: 18px;
+  background: var(--primary); color: var(--btn-text);
+  padding: 10px 14px; border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+.modal {position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.35); z-index:60}
+.modal .dialog {width:90%; max-width:720px; background:var(--bg); padding:16px; border-radius:8px}
+[data-theme="high-contrast"] .modal .dialog { border: 2px solid var(--primary); background: #000; }
+
+@media (max-width: 980px) {
+  .app { grid-template-columns: 1fr; padding-bottom: 40px; }
+  nav.sidebar { height: auto; display: flex; overflow-x: auto; }
+}
