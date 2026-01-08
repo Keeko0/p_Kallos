@@ -1,4 +1,14 @@
 /* =========================================
+   0. CUSTOM FONTS
+   ========================================= */
+@font-face {
+  font-family: 'KallosCustom'; /* To jest nazwa, której będziemy używać */
+  src: url('Resources/Greek-font.ttf'); /* <--- TU WPISZ DOKŁADNĄ NAZWĘ SWOJEGO PLIKU (np. .ttf, .otf) */
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* =========================================
    1. DESIGN TOKENS & THEMES
    ========================================= */
 :root {
@@ -195,6 +205,13 @@ header.app-header {
   gap: 12px; padding: 12px; background: var(--surface); border-radius: var(--radius);
 }
 [data-theme="high-contrast"] header.app-header { border: 1px solid var(--primary); }
+
+.brand h1 { 
+  margin: 5; 
+  letter-spacing: .25rem;
+  font-size: 1.6rem;
+  font-family: 'KallosCustom', sans-serif;
+}
 
 .brand { display: flex; gap: 12px; align-items: center; }
 .logo { height: 44px; width: auto; max-width: 150px; object-fit: contain; display: block; border-radius: 8px; }
