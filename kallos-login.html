@@ -1,44 +1,44 @@
 <!doctype html>
-<html lang="pl">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Kallos — Logowanie</title>
+<title>Kallos — Login</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="login-page">
 
   <main class="login-card">
     <div id="logout-msg" class="alert-success" role="alert">
-      Pomyślnie wylogowano z systemu.
+      You have been logged out successfully.
     </div>
 
     <div class="logo-area">
       <img src="Resources/kallos-big.jpg" alt="Logo Kallos" class="logo-img-large">
     </div>
     
-    <h1>Witaj ponownie</h1>
-    <p class="subtitle">Zaloguj się do panelu Kallos</p>
+    <h1>Welcome back</h1>
+    <p class="subtitle">Sign in to the Kallos panel</p>
 
     <form id="loginForm">
       <div class="form-group">
-        <label for="username">Login</label>
+        <label for="username">Username</label>
         <input type="text" id="username" name="username" required autocomplete="username">
       </div>
       <div class="form-group">
-        <label for="password">Hasło</label>
+        <label for="password">Password</label>
         <input type="password" id="password" name="password" required autocomplete="current-password">
       </div>
-      <button type="submit" class="btn-primary">Zaloguj się</button>
+      <button type="submit" class="btn-primary">Sign in</button>
     </form>
   </main>
 
   <div id="authOverlay" class="auth-overlay" role="dialog" aria-modal="true">
     <div class="auth-modal">
       <div style="font-size: 3rem; margin-bottom: 1rem;" aria-hidden="true">🔒</div>
-      <h2 style="margin-top:0">Weryfikacja</h2>
-      <p class="muted">Potwierdź, że to Ty próbujesz się zalogować.</p>
-      <button id="confirmIdentity" class="btn-primary" style="background: var(--accent); color: var(--btn-accent-text);">Potwierdzam, to ja</button>
+      <h2 style="margin-top:0">Verification</h2>
+      <p class="muted">Please confirm it is you trying to sign in.</p>
+      <button id="confirmIdentity" class="btn-primary" style="background: var(--accent); color: var(--btn-accent-text);">Yes, it's me</button>
     </div>
   </div>
 

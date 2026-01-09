@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pl">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -9,10 +9,10 @@
 
 <script>
   // Sprawdź logowanie
-      // Uwaga: przy otwieraniu plików lokalnie (file://) niektóre przeglądarki
-  // traktują każdy plik jako osobne "źródło" i localStorage nie jest współdzielone.
-  // Żeby uniknąć pętli logowania przy lokalnym podglądzie makiety,
-  // wymuszamy przekierowanie tylko, gdy aplikacja działa przez HTTP/HTTPS.
+  // Note: when opening files locally (file://) some browsers treat each file
+  // as a separate "origin" and localStorage is not shared between them.
+  // To avoid a login loop in local preview, we only enforce the redirect
+  // when the app is running over HTTP/HTTPS.
   const isHttpContext = window.location.protocol === 'http:' || window.location.protocol === 'https:';
   if (isHttpContext && !localStorage.getItem('kallos_user')) {
     window.location.href = 'kallos-login.html';
@@ -32,37 +32,37 @@
       <img src="Resources/kallos-logo.jpg" alt="Logo Kallos" class="logo">
       <div>
         <h1 id="appTitle" style="margin:0">Kallos</h1>
-        <div class="muted small">Aplikacja do analiz płacowych</div>
+        <div class="muted small">Pay analytics application</div>
       </div>
     </div>
 
     <div class="controls">
-      <label for="theme-select" class="visually-hidden">Tryb interfejsu</label>
-      <select id="theme-select" aria-label="Wybierz tryb interfejsu" style="width:auto">
-        <option value="light">Jasny</option>
-        <option value="dark">Ciemny</option>
-        <option value="high-contrast">Wysoki kontrast</option>
+      <label for="theme-select" class="visually-hidden">Interface theme</label>
+      <select id="theme-select" aria-label="Choose interface theme" style="width:auto">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+        <option value="high-contrast">High contrast</option>
       </select>
       
       <div class="user-badge" id="userInfo">
-        <span class="muted small">Zalogowano jako</span>
+        <span class="muted small">Signed in as</span>
         <strong id="displayUsername">...</strong>
       </div>
       
-      <button id="logoutBtn" class="btn btn-outline">Wyloguj</button>
+      <button id="logoutBtn" class="btn btn-outline">Log out</button>
     </div>
   </header>
 
-  <nav class="sidebar" role="navigation" aria-label="Główne menu">
+  <nav class="sidebar" role="navigation" aria-label="Main menu">
     <ul class="nav-list" role="list">
       <li><button data-view="dashboard" aria-current="true">Dashboard</button></li>
-      <li><button data-view="import">Import danych</button></li>
-      <li><button data-view="data">Dane</button></li>
-      <li><button data-view="visual">Wizualizacje</button></li>
-      <li><button data-view="analysis">Analizy</button></li>
-      <li><button data-view="reports">Generuj raport</button></li>
+      <li><button data-view="import">Import data</button></li>
+      <li><button data-view="data">Data</button></li>
+      <li><button data-view="visual">Visualisations</button></li>
+      <li><button data-view="analysis">Analysis</button></li>
+      <li><button data-view="reports">Generate report</button></li>
       <li><button data-view="admin">Admin</button></li>
-      <li><button data-view="help">Pomoc</button></li>
+      <li><button data-view="help">Help</button></li>
     </ul>
   </nav>
 
@@ -73,80 +73,80 @@
       <div class="toolbar">
         <div class="kpi card">
           <div>
-            <div class="muted">Rekordy</div>
+            <div class="muted">Records</div>
             <div class="num" id="kpi-records">0</div>
           </div>
         </div>
         <div class="kpi card">
           <div>
-            <div class="muted">Ostatni import</div>
+            <div class="muted">Last import</div>
             <div class="num" id="kpi-last">—</div>
           </div>
         </div>
         <div class="kpi card">
           <div>
-            <div class="muted">Średnia płaca</div>
+            <div class="muted">Average pay</div>
             <div class="num" id="kpi-avg">—</div>
           </div>
         </div>
         <div style="margin-left:auto">
-          <button id="quick-import" class="btn">Importuj plik</button>
+          <button id="quick-import" class="btn">Import file</button>
         </div>
       </div>
 
       <div class="grid two-col">
         <div class="card">
-          <h2>Przegląd</h2>
-          <p class="muted">Szybkie akcje i podsumowanie najważniejszych metryk.</p>
+          <h2>Overview</h2>
+          <p class="muted">Quick actions and a summary of key metrics.</p>
 
           <div id="small-charts" class="grid full" style="margin-top:12px; gap:8px">
             <div class="card" id="chart-sample" style="min-height:160px">
-              <strong>Rozkład płac - przykładowy wykres</strong>
+              <strong>Pay distribution – sample chart</strong>
               <div id="mini-chart" class="chart-area" aria-hidden="true"></div>
             </div>
             <div class="card">
-              <strong>Ostatnie operacje</strong>
+              <strong>Recent activity</strong>
               <ul id="log-list" class="muted small" style="margin:8px 0 0 16px; padding:0"></ul>
             </div>
           </div>
         </div>
 
         <aside class="card" aria-labelledby="asideTitle">
-          <h3 id="asideTitle">Filtry globalne</h3>
+          <h3 id="asideTitle">Global filters</h3>
           <div class="form-row">
-            <label for="filter-agency">Agencja</label>
-            <select id="filter-agency"><option value="">Wszystkie</option></select>
+            <label for="filter-agency">Agency</label>
+            <select id="filter-agency"><option value="">All</option></select>
           </div>
           <div class="form-row">
-            <label for="filter-year">Rok</label>
-            <select id="filter-year"><option value="">Wszystkie</option></select>
+            <label for="filter-year">Year</label>
+            <select id="filter-year"><option value="">All</option></select>
           </div>
           <div>
-            <button id="apply-filters" class="btn">Zastosuj</button>
+            <button id="apply-filters" class="btn">Apply</button>
           </div>
         </aside>
       </div>
     </section>
 
     <section id="view-import" class="view" style="display:none" aria-hidden="true">
-      <h2>Import danych płacowych</h2>
-      <p class="muted">Obsługiwane formaty: CSV / TXT. Wymagane kolumny: <code>name,agency,grade,salary,start_date</code></p>
+      <h2>Import pay data</h2>
+      <p class="muted">Supported formats: CSV / TXT. Required columns: <code>name,agency,grade,salary,start_date</code></p>
       <div class="card">
         <form id="import-form" aria-describedby="import-desc">
-          <div id="import-desc" class="muted">Przeciągnij plik, lub wybierz go z dysku. Możesz zobaczyć podgląd i mapować kolumny.</div>
+          <div id="import-desc" class="muted">Drag &amp; drop a file or pick it from disk. You can preview rows and map columns.</div>
           <div style="margin-top:12px;">
-            <input id="file-input" type="file" accept=".csv,.txt" aria-label="Wybierz plik CSV" />
+            <input id="file-input" type="file" accept=".csv,.txt" aria-label="Choose CSV file" />
           </div>
           <div id="map-area" style="margin-top:12px; display:none">
-            <strong>Mapowanie kolumn</strong>
+            <strong>Column mapping</strong>
             <div id="map-rows" style="margin-top:8px"></div>
             <div style="margin-top:10px">
-              <button type="button" id="start-import" class="btn">Importuj</button>
-              <button type="button" id="cancel-import" style="margin-left:8px">Anuluj</button>
+              <button type="button" id="start-import" class="btn">Import</button>
+              <button type="button" id="cancel-import" style="margin-left:8px">Cancel</button>
             </div>
           </div>
           <div id="preview-area" style="margin-top:12px; display:none">
-            <strong>Podgląd pliku (pierwsze wiersze)</strong>
+            <strong>File preview (first rows)</strong>
             <div class="table-wrap card" id="preview-table-wrap" style="margin-top:8px"></div>
           </div>
         </form>
@@ -154,19 +154,19 @@
     </section>
 
     <section id="view-data" class="view" style="display:none" aria-hidden="true">
-      <h2>Dane</h2>
-      <p class="muted">Przegląd surowych danych. Możesz filtrować, sortować i eksportować wybrane rekordy.</p>
+      <h2>Data</h2>
+      <p class="muted">Browse raw data. You can filter, sort and export selected records.</p>
       <div class="card">
         <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px">
-          <input id="search-input" type="text" placeholder="Szukaj (imię, agencja...)" aria-label="Szukaj w danych" />
-          <button id="export-csv" class="btn">Eksportuj CSV</button>
-          <div style="margin-left:auto" class="muted small">Zaznaczonych: <span id="selected-count">0</span></div>
+          <input id="search-input" type="text" placeholder="Search (name, agency...)" aria-label="Search in data" />
+          <button id="export-csv" class="btn">Export CSV</button>
+          <div style="margin-left:auto" class="muted small">Selected: <span id="selected-count">0</span></div>
         </div>
         <div class="table-wrap">
           <table id="data-table" aria-describedby="table-desc">
-            <caption id="table-desc" class="visually-hidden">Tabela rekordów płacowych</caption>
+            <caption id="table-desc" class="visually-hidden">Table of pay records</caption>
             <thead>
-              <tr><th><input id="select-all" type="checkbox" aria-label="Zaznacz wszystko"></th><th>Imię</th><th>Agencja</th><th>Grade</th><th>Wynagrodzenie</th><th>Data zatrudnienia</th></tr>
+              <tr><th><input id="select-all" type="checkbox" aria-label="Select all rows"></th><th>Name</th><th>Agency</th><th>Grade</th><th>Salary</th><th>Hire date</th></tr>
             </thead>
             <tbody id="table-body"></tbody>
           </table>
@@ -175,66 +175,66 @@
     </section>
 
     <section id="view-visual" class="view" style="display:none" aria-hidden="true">
-      <h2>Wizualizacje</h2>
-      <p class="muted">Wybierz zmienne i wygeneruj wykres. Tutaj przykład: średnia płaca wg. Grade.</p>
+      <h2>Visualisations</h2>
+      <p class="muted">Choose variables and generate a chart. Example: average pay per grade.</p>
       <div class="grid full">
         <div class="card">
           <div class="form-row">
-            <label for="vis-type">Typ wykresu</label>
-            <select id="vis-type"><option value="bar">Słupkowy</option><option value="line">Liniowy (demo)</option></select>
+            <label for="vis-type">Chart type</label>
+            <select id="vis-type"><option value="bar">Bar</option><option value="line">Line (demo)</option></select>
           </div>
           <div class="form-row">
-            <label for="vis-group">Grupuj po</label>
-            <select id="vis-group"><option value="grade">Grade</option><option value="agency">Agencja</option></select>
+            <label for="vis-group">Group by</label>
+            <select id="vis-group"><option value="grade">Grade</option><option value="agency">Agency</option></select>
           </div>
           <div>
-            <button id="gen-chart" class="btn">Generuj wykres</button>
+            <button id="gen-chart" class="btn">Generate chart</button>
           </div>
         </div>
         <div class="card">
-          <strong>Wykres</strong>
-          <div id="chart-wrap" class="chart-area" aria-label="Wykres średnich płac"></div>
-          <div id="chart-desc" class="muted small">Możesz zapisać wykres jako obraz (prawy przycisk → Zapisz obraz).</div>
+          <strong>Chart</strong>
+          <div id="chart-wrap" class="chart-area" aria-label="Chart of average pay"></div>
+          <div id="chart-desc" class="muted small">You can save the chart as an image (right click → Save image).</div>
         </div>
       </div>
     </section>
 
     <section id="view-analysis" class="view" style="display:none" aria-hidden="true">
-      <h2>Analizy statystyczne</h2>
+      <h2>Statistical analysis</h2>
       <div class="card">
         <div class="form-row">
-          <label for="sim-pct">Symulator podwyżek (%)</label>
+          <label for="sim-pct">Raise simulator (%)</label>
           <input id="sim-pct" type="range" min="0" max="50" value="0" aria-valuemin="0" aria-valuemax="50" />
-          <div class="muted small">Zmiana: <span id="sim-value">0</span>%</div>
+          <div class="muted small">Change: <span id="sim-value">0</span>%</div>
         </div>
-        <div id="sim-result" class="muted small" style="margin-top:8px">Wpływ na budżet: —</div>
-        <div style="margin-top:12px"><button id="run-sim" class="btn">Uruchom symulację</button></div>
+        <div id="sim-result" class="muted small" style="margin-top:8px">Impact on budget: —</div>
+        <div style="margin-top:12px"><button id="run-sim" class="btn">Run simulation</button></div>
       </div>
     </section>
 
     <section id="view-reports" class="view" style="display:none" aria-hidden="true">
-      <h2>Generowanie raportu</h2>
+      <h2>Report generation</h2>
       <div class="card">
         <div class="form-row">
           <label for="report-format">Format</label>
-          <select id="report-format"><option value="csv">CSV</option><option value="pdf">Druk / PDF (print)</option></select>
+          <select id="report-format"><option value="csv">CSV</option><option value="pdf">Print / PDF</option></select>
         </div>
         <div style="margin-top:8px">
-          <button id="generate-report" class="btn">Generuj raport</button>
+          <button id="generate-report" class="btn">Generate report</button>
         </div>
         <div id="report-preview" style="margin-top:12px"></div>
       </div>
     </section>
 
     <section id="view-admin" class="view" style="display:none" aria-hidden="true">
-      <h2>Panel administracyjny</h2>
+      <h2>Administration</h2>
       <div class="card">
         <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px">
-          <button id="create-user" class="btn">Utwórz konto</button>
+          <button id="create-user" class="btn">Create account</button>
         </div>
         <div class="table-wrap">
-          <table aria-label="Lista użytkowników">
-            <thead><tr><th>Login</th><th>Rola</th><th>Ostatnie logowanie</th><th>Akcje</th></tr></thead>
+          <table aria-label="User list">
+            <thead><tr><th>Login</th><th>Role</th><th>Last login</th><th>Actions</th></tr></thead>
             <tbody id="admin-users"></tbody>
           </table>
         </div>
@@ -242,10 +242,10 @@
     </section>
 
     <section id="view-help" class="view" style="display:none" aria-hidden="true">
-      <h2>Pomoc i dokumentacja</h2>
+      <h2>Help &amp; documentation</h2>
       <div class="card">
-        <h3>Wymagany format pliku</h3>
-        <p class="muted">Plik CSV zawierający co najmniej kolumny: <code>name,agency,grade,salary,start_date</code>. Separator: <strong>;</strong> lub <strong>,</strong></p>
+        <h3>Required file format</h3>
+        <p class="muted">CSV file containing at least columns: <code>name,agency,grade,salary,start_date</code>. Separator: <strong>;</strong> or <strong>,</strong></p>
       </div>
     </section>
   </main>
@@ -255,18 +255,18 @@
 <div id="toast-root" aria-live="polite" style="position:fixed; right:18px; bottom:18px"></div>
 
 <script>
-/* Obsługa wyświetlania usera i wylogowania */
+/* Handle displaying current user and logging out */
 const currentUser = localStorage.getItem('kallos_user');
-document.getElementById('displayUsername').textContent = currentUser || 'Gość';
+document.getElementById('displayUsername').textContent = currentUser || 'Guest';
 
 document.getElementById('logoutBtn').addEventListener('click', () => {
   const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
   localStorage.removeItem('kallos_user');
-  // Przekaż aktualny motyw w URL, żeby ekran logowania mógł go odtworzyć
+  // Pass current theme in URL so the login screen can restore it
   window.location.href = 'kallos-login.html?logout=true&theme=' + encodeURIComponent(currentTheme);
 });
 
-/* PONIŻEJ PEŁNA LOGIKA APLIKACJI (IMPORT, CHARTY, ETC) */
+/* FULL APPLICATION LOGIC BELOW (IMPORT, CHARTS, ETC) */
 const state = {
   view: 'dashboard',
   data: [], 
@@ -318,7 +318,7 @@ $('#quick-import').addEventListener('click', ()=>{
   $('#file-input').focus();
 });
 
-/* ======= IMPORT: handle file selection, preview, map ======= */
+/* ======= IMPORT: handle file selection, preview, mapping ======= */
 let lastHeaders = [];
 $('#file-input').addEventListener('change', async (e)=>{
   const file = e.target.files[0];
@@ -326,7 +326,7 @@ $('#file-input').addEventListener('change', async (e)=>{
   const text = await file.text();
   const sep = text.includes(';') ? ';' : ',';
   const lines = text.split(/\r?\n/).filter(Boolean);
-  if (lines.length === 0) { alert('Plik pusty'); return; }
+  if (lines.length === 0) { alert('File is empty'); return; }
   lastHeaders = lines[0].split(sep).map(h=>h.trim());
   
   const mapArea = $('#map-area'); mapArea.style.display='block';
@@ -360,7 +360,7 @@ $('#start-import').addEventListener('click', ()=>{
   const mapping = {};
   for (const sel of selects){
     if (!sel.value) {
-      alert('Proszę zmapować wszystkie wymagane kolumny.');
+      alert('Please map all required columns.');
       sel.focus();
       return;
     }
@@ -368,7 +368,7 @@ $('#start-import').addEventListener('click', ()=>{
   }
   const fileInput = $('#file-input');
   const file = fileInput.files[0];
-  if (!file) { alert('Brak pliku'); return; }
+  if (!file) { alert('No file selected'); return; }
   file.text().then(text=>{
     const sep = text.includes(';') ? ';' : ',';
     const lines = text.split(/\r?\n/).filter(Boolean);
@@ -389,11 +389,11 @@ $('#start-import').addEventListener('click', ()=>{
     updateKPI();
     populateFilters();
     renderTable();
-    showToast('Import zakończony: ' + rows.length + ' rekordów');
+    showToast('Import finished: ' + rows.length + ' records');
     $('#map-area').style.display='none';
     $('#preview-area').style.display='none';
     fileInput.value='';
-    addLog(`Import: ${rows.length} rekordów`);
+    addLog(`Import: ${rows.length} records`);
   });
 });
 
@@ -442,12 +442,12 @@ function updateSelectedCount(){
 }
 
 $('#export-csv').addEventListener('click', ()=>{
-  if (state.data.length===0) { alert('Brak danych do eksportu'); return; }
+  if (state.data.length===0) { alert('No data to export'); return; }
   const csv = toCSV(state.data);
   const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a'); a.href=url; a.download='kallos_export.csv'; a.click(); URL.revokeObjectURL(url);
-  showToast('Eksport CSV wygenerowany');
+  showToast('CSV export generated');
 });
 
 function toCSV(arr){
@@ -495,7 +495,7 @@ function renderSVGChart(selector, items, opts={height:200, showLabels:true}){
     rect.setAttribute('fill', 'var(--primary)'); 
     rect.setAttribute('rx',4);
     rect.setAttribute('role','img');
-    rect.setAttribute('aria-label', `${it.k}: średnio ${Math.round(it.avg)} PLN, ${it.count} rekordy`);
+    rect.setAttribute('aria-label', `${it.k}: average ${Math.round(it.avg)} PLN, ${it.count} records`);
     svg.appendChild(rect);
     if (opts.showLabels){
       const text = document.createElementNS(svgNS,'text');
@@ -531,8 +531,8 @@ $('#run-sim').addEventListener('click', ()=>{
   const base = state.data.reduce((s,r)=>s + (r.salary||0),0);
   const newTotal = base * (1 + pct/100);
   const diff = newTotal - base;
-  $('#sim-result').textContent = `Obecny budżet: ${Math.round(base).toLocaleString('pl-PL')} PLN. Po podwyżce: ${Math.round(newTotal).toLocaleString('pl-PL')} PLN. Zmiana: ${Math.round(diff).toLocaleString('pl-PL')} PLN.`;
-  addLog(`Symulacja: +${pct}% -> ${Math.round(diff)} PLN`);
+  $('#sim-result').textContent = `Current budget: ${Math.round(base).toLocaleString('pl-PL')} PLN. After raise: ${Math.round(newTotal).toLocaleString('pl-PL')} PLN. Change: ${Math.round(diff).toLocaleString('pl-PL')} PLN.`;
+  addLog(`Simulation: +${pct}% -> ${Math.round(diff)} PLN`);
 });
 
 $('#generate-report').addEventListener('click', ()=>{
@@ -556,30 +556,30 @@ function renderAdminUsers(){
   state.users.forEach((u,i)=>{
     const tr = document.createElement('tr');
     tr.innerHTML = `<td>${u.login}</td><td>${u.role}</td><td>${u.last}</td><td>
-      <button data-idx="${i}" class="small btn-outline delete-user">Usuń</button>
+      <button data-idx="${i}" class="small btn-outline delete-user">Delete</button>
     </td>`;
     tbody.appendChild(tr);
   });
 }
 
-// Obsługa usuwania użytkownika z listy
+// Handle removing user from the list
 document.getElementById('admin-users').addEventListener('click', (e)=>{
   const btn = e.target.closest('.delete-user');
   if (!btn) return;
   const idx = parseInt(btn.getAttribute('data-idx'), 10);
   if (Number.isNaN(idx) || idx < 0 || idx >= state.users.length) return;
   const user = state.users[idx];
-  if (!confirm(`Na pewno usunąć użytkownika "${user.login}"?`)) return;
+  if (!confirm(`Are you sure you want to delete user "${user.login}"?`)) return;
   state.users.splice(idx, 1);
   renderAdminUsers();
-  showToast(`Usunięto użytkownika: ${user.login}`);
+  showToast(`Deleted user: ${user.login}`);
 });
 $('#create-user').addEventListener('click', ()=>{
-  const login = prompt('Login nowego konta:','user1');
+  const login = prompt('Login for new account:','user1');
   if (!login) return;
   state.users.push({login, role:'User', last:'-'});
   renderAdminUsers();
-  showToast('Utworzono konto: '+login);
+  showToast('Created account: '+login);
 });
 renderAdminUsers();
 
@@ -605,11 +605,11 @@ function addLog(txt){
 /* initial demo dataset */
 (function seed(){
   const demo = [
-    {name:'Anna Kowalska', agency:'Dept. Zdrowia', grade:'G5', salary:6800, start_date:'2019-06-02'},
-    {name:'Jan Nowak', agency:'Dept. Finansów', grade:'G7', salary:9200, start_date:'2015-08-15'},
-    {name:'Maria Wiśniewska', agency:'Dept. Zdrowia', grade:'G5', salary:7000, start_date:'2020-01-10'},
-    {name:'Piotr Zieliński', agency:'Dept. Edukacji', grade:'G4', salary:5400, start_date:'2021-03-01'},
-    {name:'Katarzyna Malin', agency:'Dept. Finansów', grade:'G6', salary:8100, start_date:'2018-11-30'}
+    {name:'Anna Smith', agency:'Dept. of Health', grade:'G5', salary:6800, start_date:'2019-06-02'},
+    {name:'John Miller', agency:'Dept. of Finance', grade:'G7', salary:9200, start_date:'2015-08-15'},
+    {name:'Mary Johnson', agency:'Dept. of Health', grade:'G5', salary:7000, start_date:'2020-01-10'},
+    {name:'Peter Green', agency:'Dept. of Education', grade:'G4', salary:5400, start_date:'2021-03-01'},
+    {name:'Kate Brown', agency:'Dept. of Finance', grade:'G6', salary:8100, start_date:'2018-11-30'}
   ];
   state.data = state.data.concat(demo);
   updateKPI(); populateFilters(); renderTable(); generateChart('grade');
