@@ -9,9 +9,15 @@
 
 <script>
   // Sprawdź logowanie
-  if (!localStorage.getItem('kallos_user')) {
+  // Uwaga: przy otwieraniu plików lokalnie (file://) niektóre przeglądarki
+  // traktują każdy plik jako osobne "źródło" i localStorage nie jest współdzielone.
+  // Żeby uniknąć pętli logowania przy lokalnym podglądzie makiety,
+  // wymuszamy przekierowanie tylko, gdy aplikacja działa przez HTTP/HTTPS.
+  const isHttpContext = window.location.protocol === 'http:' || window.location.protocol === 'https:';
+  if (isHttpContext && !localStorage.getItem('kallos_user')) {
     window.location.href = 'kallos-login.html';
   }
+
   // WCZYTAJ ZAPISANY MOTYW
   const savedTheme = localStorage.getItem('kallos_theme') || 'light';
   document.documentElement.setAttribute('data-theme', savedTheme);
