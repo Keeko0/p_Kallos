@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Kallos — makieta (WCAG)</title>
+<title>Kallos</title>
 
 <link rel="stylesheet" href="style.css">
 
 <script>
   // Sprawdź logowanie
-  // Uwaga: przy otwieraniu plików lokalnie (file://) niektóre przeglądarki
+      // Uwaga: przy otwieraniu plików lokalnie (file://) niektóre przeglądarki
   // traktują każdy plik jako osobne "źródło" i localStorage nie jest współdzielone.
   // Żeby uniknąć pętli logowania przy lokalnym podglądzie makiety,
   // wymuszamy przekierowanie tylko, gdy aplikacja działa przez HTTP/HTTPS.
@@ -25,8 +25,6 @@
 
 </head>
 <body data-theme="light">
-
-<a class="skip-link" href="#main-content">Przejdź do treści</a>
 
 <div class="app" role="application" aria-labelledby="appTitle">
   <header class="app-header" role="banner">
@@ -59,7 +57,7 @@
     <ul class="nav-list" role="list">
       <li><button data-view="dashboard" aria-current="true">Dashboard</button></li>
       <li><button data-view="import">Import danych</button></li>
-      <li><button data-view="data">Dane (tabela)</button></li>
+      <li><button data-view="data">Dane</button></li>
       <li><button data-view="visual">Wizualizacje</button></li>
       <li><button data-view="analysis">Analizy</button></li>
       <li><button data-view="reports">Generuj raport</button></li>
@@ -68,7 +66,7 @@
     </ul>
   </nav>
 
-  <main id="main-content" class="content" role="main" tabindex="-1">
+<main id="main-content" class="content" role="main">
     <div id="status" role="status" aria-live="polite" class="visually-hidden"></div>
 
     <section id="view-dashboard" class="view" aria-hidden="false">
@@ -156,7 +154,7 @@
     </section>
 
     <section id="view-data" class="view" style="display:none" aria-hidden="true">
-      <h2>Dane — tabela</h2>
+      <h2>Dane</h2>
       <p class="muted">Przegląd surowych danych. Możesz filtrować, sortować i eksportować wybrane rekordy.</p>
       <div class="card">
         <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px">
@@ -195,7 +193,7 @@
         </div>
         <div class="card">
           <strong>Wykres</strong>
-          <div id="chart-wrap" class="chart-area" tabindex="0" aria-label="Wykres średnich płac"></div>
+          <div id="chart-wrap" class="chart-area" aria-label="Wykres średnich płac"></div>
           <div id="chart-desc" class="muted small">Możesz zapisać wykres jako obraz (prawy przycisk → Zapisz obraz).</div>
         </div>
       </div>
@@ -233,7 +231,6 @@
       <div class="card">
         <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px">
           <button id="create-user" class="btn">Utwórz konto</button>
-          <button id="view-logs" type="button">Zobacz logi</button>
         </div>
         <div class="table-wrap">
           <table aria-label="Lista użytkowników">
@@ -249,8 +246,6 @@
       <div class="card">
         <h3>Wymagany format pliku</h3>
         <p class="muted">Plik CSV zawierający co najmniej kolumny: <code>name,agency,grade,salary,start_date</code>. Separator: <strong>;</strong> lub <strong>,</strong></p>
-        <h3>WCAG</h3>
-        <p class="muted">Makieta uwzględnia: kontrast, nawigację klawiaturą, role ARIA, tekst alternatywny, focus states oraz tryb wysoki kontrast.</p>
       </div>
     </section>
   </main>
@@ -265,8 +260,10 @@ const currentUser = localStorage.getItem('kallos_user');
 document.getElementById('displayUsername').textContent = currentUser || 'Gość';
 
 document.getElementById('logoutBtn').addEventListener('click', () => {
-  localStorage.removeItem('kallos_user');
-  window.location.href = 'kallos-login.html?logout=true';
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+  localStorage.removeItem('kallos_user');
+  // Przekaż aktualny motyw w URL, żeby ekran logowania mógł go odtworzyć
+  window.location.href = 'kallos-login.html?logout=true&theme=' + encodeURIComponent(currentTheme);
 });
 
 /* PONIŻEJ PEŁNA LOGIKA APLIKACJI (IMPORT, CHARTY, ETC) */
@@ -286,9 +283,6 @@ function showToast(msg, opts={}) {
   root.appendChild(el);
   setTimeout(()=>el.remove(), 3500);
 }
-/* keyboard: focus main when view changes */
-function focusMain(){ $('#main-content').focus() }
-
 /* ======= THEME SWITCH - POPRAWIONA LOGIKA ======= */
 const themeSelect = $('#theme-select');
 // 1. Ustaw select na wartość z pamięci (żeby pokazywał dobrą opcję)
@@ -316,7 +310,6 @@ function showView(name){
     if (v.id === 'view-' + name) { v.style.display='block'; v.setAttribute('aria-hidden','false') }
     else { v.style.display='none'; v.setAttribute('aria-hidden','true') }
   });
-  focusMain();
 }
 
 /* ======= QUICK IMPORT BUTTON (shortcut to view) ======= */
@@ -562,13 +555,25 @@ function renderAdminUsers(){
   const tbody = $('#admin-users'); tbody.innerHTML='';
   state.users.forEach((u,i)=>{
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${u.login}</td><td>${u.role}</td><td>${u.last}</td><td>
-      <button data-idx="${i}" class="btn small edit-user">Edytuj</button>
-      <button data-idx="${i}" class="small" style="margin-left:6px">Usuń</button>
-    </td>`;
+    tr.innerHTML = `<td>${u.login}</td><td>${u.role}</td><td>${u.last}</td><td>
+      <button data-idx="${i}" class="small btn-outline delete-user">Usuń</button>
+    </td>`;
     tbody.appendChild(tr);
   });
 }
+
+// Obsługa usuwania użytkownika z listy
+document.getElementById('admin-users').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.delete-user');
+  if (!btn) return;
+  const idx = parseInt(btn.getAttribute('data-idx'), 10);
+  if (Number.isNaN(idx) || idx < 0 || idx >= state.users.length) return;
+  const user = state.users[idx];
+  if (!confirm(`Na pewno usunąć użytkownika "${user.login}"?`)) return;
+  state.users.splice(idx, 1);
+  renderAdminUsers();
+  showToast(`Usunięto użytkownika: ${user.login}`);
+});
 $('#create-user').addEventListener('click', ()=>{
   const login = prompt('Login nowego konta:','user1');
   if (!login) return;
@@ -610,9 +615,6 @@ function addLog(txt){
   updateKPI(); populateFilters(); renderTable(); generateChart('grade');
 })();
 
-document.querySelector('.skip-link').addEventListener('click', (e)=>{
-  $('#main-content').focus();
-});
 window._Kallos = {state, generateChart, renderTable};
 </script>
 </body>

@@ -5,11 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Kallos — Logowanie</title>
 <link rel="stylesheet" href="style.css">
-<script>
-  // Wczytaj motyw z pamięci
-  const savedTheme = localStorage.getItem('kallos_theme') || 'light';
-  document.documentElement.setAttribute('data-theme', savedTheme);
-</script>
 </head>
 <body class="login-page">
 
@@ -49,6 +44,19 @@
 
   <script>
     const params = new URLSearchParams(window.location.search);
+
+    // Najpierw spróbuj użyć motywu przekazanego w URL (np. po wylogowaniu)
+    const urlTheme = params.get('theme');
+    if (urlTheme) {
+      document.documentElement.setAttribute('data-theme', urlTheme);
+      // Zapisz go też w localStorage, żeby był spójny po ponownym logowaniu
+      localStorage.setItem('kallos_theme', urlTheme);
+    } else {
+      // W przeciwnym razie użyj motywu z pamięci (domyślnie light)
+      const savedTheme = localStorage.getItem('kallos_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    }
+
     if (params.get('logout') === 'true') {
       document.getElementById('logout-msg').style.display = 'block';
       window.history.replaceState({}, document.title, window.location.pathname);

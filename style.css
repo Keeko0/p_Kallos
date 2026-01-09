@@ -78,15 +78,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Linki pomijające (Accessibility) */
-.skip-link {
-  position: absolute; left: -999px; top: auto; width: 1px; height: 1px; overflow: hidden;
-}
-.skip-link:focus {
-  left: 16px; top: 16px; width: auto; height: auto; padding: 8px;
-  background: var(--primary); color: var(--btn-text); border-radius: 6px; z-index: 999;
-}
-
 /* =========================================
    3. FORMS & BUTTONS (SHARED)
    ========================================= */
@@ -111,6 +102,14 @@ input:focus, select:focus {
   border-color: var(--primary);
 }
 
+/* Wysoki kontrast – mocniejszy focus dla selectów (np. wybór trybu, filtrów) */
+[data-theme="high-contrast"] select:focus-visible {
+  border-color: var(--primary);
+  background-color: #000000;
+  color: var(--text);
+  box-shadow: 0 0 0 3px var(--primary);
+}
+
 .form-group, .form-row { margin-bottom: 1rem; }
 
 button, .btn, .btn-primary {
@@ -122,11 +121,25 @@ button, .btn, .btn-primary {
   cursor: pointer;
   font-weight: 600;
   font-size: 0.95rem;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, background-color 0.15s ease-out;
 }
 
 button:hover, .btn:hover { opacity: 0.9; }
-button:focus, .btn:focus { outline: none; box-shadow: var(--focus); }
+
+/* Wyraźny focus dla wszystkich przycisków (np. Wyloguj, Importuj plik, Zastosuj) */
+button:focus-visible,
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+  border: 2px solid var(--primary);
+}
+
+/* Dodatkowe podbicie tła dla głównych przycisków */
+.btn:focus-visible,
+.btn-primary:focus-visible {
+  background-color: var(--primary);
+  filter: brightness(0.9);
+}
 
 /* Wariant Outline */
 button.btn-outline {
@@ -236,6 +249,20 @@ nav.sidebar {
 .nav-list button[aria-current="true"] { background: linear-gradient(90deg, rgba(11,109,242,0.12), transparent); }
 [data-theme="high-contrast"] .nav-list button[aria-current="true"] { background: var(--primary); color: var(--btn-text); }
 
+/* Wyraźny focus w nawigacji bocznej */
+.nav-list button:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+  background: linear-gradient(90deg, rgba(11,109,242,0.16), transparent);
+}
+
+/* Wysoki kontrast – jeszcze mocniejsze tło przy focusie w nawigacji */
+[data-theme="high-contrast"] .nav-list button:focus-visible {
+  background: var(--primary);
+  color: var(--btn-text);
+  border: 2px solid var(--primary);
+}
+
 main.content {
   background: var(--surface); padding: 16px; border-radius: var(--radius); min-height: 60vh;
 }
@@ -262,6 +289,25 @@ th, td { padding: 8px; text-align: left; border-bottom: 1px solid #e6eef8; }
 [data-theme="high-contrast"] th, [data-theme="high-contrast"] td { border-bottom: 1px solid var(--muted); }
 th { font-weight: 700; background: transparent; position: sticky; top: 0; backdrop-filter: blur(4px); }
 .table-wrap { overflow: auto; max-height: 320px; border-radius: 8px; }
+
+/* Dane (tabela) – wyraźny focus dla checkboxów w tabeli (w tym "Zaznacz wszystko") */
+table input[type="checkbox"]:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+}
+
+tbody tr:has(input[type="checkbox"]:focus-visible) {
+  background-color: rgba(11,109,242,0.18);
+}
+
+/* Wysoki kontrast – bardzo czytelne podświetlenie zaznaczonego wiersza i checkboxa */
+[data-theme="high-contrast"] table input[type="checkbox"]:focus-visible {
+  box-shadow: 0 0 0 3px var(--primary);
+}
+[data-theme="high-contrast"] tbody tr:has(input[type="checkbox"]:focus-visible) {
+  background-color: #000000;
+  outline: 2px solid var(--primary);
+}
 
 .chart-area { padding: 8px; }
 .toast {
