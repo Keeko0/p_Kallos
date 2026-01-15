@@ -285,11 +285,39 @@ main.content {
 .kpi .num { font-weight: 700; font-size: 1.1rem; }
 
 table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-th, td { padding: 8px; text-align: left; border-bottom: 1px solid #e6eef8; }
+th, td { padding: 8px; text-align: left; }
 [data-theme="high-contrast"] th, [data-theme="high-contrast"] td { border-bottom: 1px solid var(--muted); }
 th { font-weight: 700; background: transparent; position: sticky; top: 0; backdrop-filter: blur(4px); }
 .table-wrap { overflow: auto; max-height: 320px; border-radius: 8px; }
+th {
+  background: var(--surface);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+tbody tr {
+  position: relative;
+}
 
+tbody tr::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: #e6eef8;
+  pointer-events: none;
+}
+
+[data-theme="high-contrast"] tbody tr::after {
+  background-color: var(--muted);
+}
+
+/* Optional: no separator after last row */
+tbody tr:last-child::after {
+  display: none;
+}
 /* Dane (tabela) – wyraźny focus dla checkboxów w tabeli (w tym "Zaznacz wszystko") */
 table input[type="checkbox"]:focus-visible {
   outline: none;
