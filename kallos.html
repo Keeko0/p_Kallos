@@ -415,7 +415,7 @@ function renderTable(){
       <td>${escapeHtml(row.name)}</td>
       <td>${escapeHtml(row.agency)}</td>
       <td>${escapeHtml(row.grade)}</td>
-      <td>${row.salary.toLocaleString('pl-PL', {style:'currency', currency:'PLN', maximumFractionDigits:0})}</td>
+      <td>${row.salary.toLocaleString('pl-PL', {style:'currency', currency:'USD', maximumFractionDigits:0})}</td>
       <td>${escapeHtml(row.start_date)}</td>`;
     tbody.appendChild(tr);
   });
@@ -495,7 +495,7 @@ function renderSVGChart(selector, items, opts={height:200, showLabels:true}){
     rect.setAttribute('fill', 'var(--primary)'); 
     rect.setAttribute('rx',4);
     rect.setAttribute('role','img');
-    rect.setAttribute('aria-label', `${it.k}: average ${Math.round(it.avg)} PLN, ${it.count} records`);
+    rect.setAttribute('aria-label', `${it.k}: average ${Math.round(it.avg)} USD, ${it.count} records`);
     svg.appendChild(rect);
     if (opts.showLabels){
       const text = document.createElementNS(svgNS,'text');
@@ -504,7 +504,7 @@ function renderSVGChart(selector, items, opts={height:200, showLabels:true}){
       text.setAttribute('text-anchor','middle');
       text.setAttribute('font-size','12');
       text.setAttribute('fill', 'var(--text)');
-      text.textContent = Math.round(it.avg).toLocaleString('pl-PL') + ' PLN';
+      text.textContent = Math.round(it.avg).toLocaleString('pl-PL') + ' USD';
       svg.appendChild(text);
 
       const lab = document.createElementNS(svgNS,'text');
@@ -531,8 +531,8 @@ $('#run-sim').addEventListener('click', ()=>{
   const base = state.data.reduce((s,r)=>s + (r.salary||0),0);
   const newTotal = base * (1 + pct/100);
   const diff = newTotal - base;
-  $('#sim-result').textContent = `Current budget: ${Math.round(base).toLocaleString('pl-PL')} PLN. After raise: ${Math.round(newTotal).toLocaleString('pl-PL')} PLN. Change: ${Math.round(diff).toLocaleString('pl-PL')} PLN.`;
-  addLog(`Simulation: +${pct}% -> ${Math.round(diff)} PLN`);
+  $('#sim-result').textContent = `Current budget: ${Math.round(base).toLocaleString('pl-PL')} USD. After raise: ${Math.round(newTotal).toLocaleString('pl-PL')} USD. Change: ${Math.round(diff).toLocaleString('pl-PL')} USD.`;
+  addLog(`Simulation: +${pct}% -> ${Math.round(diff)} USD`);
 });
 
 $('#generate-report').addEventListener('click', ()=>{
@@ -587,7 +587,7 @@ renderAdminUsers();
 function updateKPI(){
   $('#kpi-records').textContent = state.data.length;
   const avg = state.data.length ? Math.round(state.data.reduce((s,r)=>s + (r.salary||0),0) / state.data.length) : '—';
-  $('#kpi-avg').textContent = (avg === '—') ? '—' : avg.toLocaleString('pl-PL') + ' PLN';
+  $('#kpi-avg').textContent = (avg === '—') ? '—' : avg.toLocaleString('pl-PL') + ' USD';
   $('#kpi-last').textContent = new Date().toLocaleString('pl-PL');
 }
 function populateFilters(){
