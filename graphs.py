@@ -48,10 +48,9 @@ def barh_chart(series, title, xlabel, ylabel, yTickSize=10):
     ax.set_ylabel(ylabel)
     ax.tick_params(axis="y", labelsize=yTickSize)
 
-    # Make spines white
     for spine in ax.spines.values():
         spine.set_color(AXES_COLOR)
-        
+
     ax.spines["right"].set_visible(False)
     ax.spines["top"].set_visible(False)
 
@@ -111,7 +110,6 @@ service_counts = (
     df["ServiceRange"]
     .fillna("Unknown")
     .value_counts()
-    #.sort_index()
     .reindex(service_range_order)
     .dropna()
 )
@@ -122,3 +120,38 @@ barh_chart(
     "Count",
     "Service Range"
 )
+
+
+# -----------------------------
+# 4. Component distribution (PIE CHART)
+# -----------------------------
+component_counts = (
+    df["Component"]
+    .fillna("Unknown")
+    .value_counts()
+)
+
+def autopct_if_large(pct):
+    return f"{pct:.1f}%" if pct >= 1 else ""
+
+fig, ax = plt.subplots()
+ax.pie(
+    component_counts,
+    labels=[
+        label if pct >= 1 else ""
+        for label, pct in zip(
+            component_counts.index,
+            component_counts / component_counts.sum() * 100
+        )
+    ],
+    autopct=autopct_if_large,
+    startangle=90,
+    textprops={"color": TEXT_COLOR}
+)
+
+ax.set_title("Component Distribution")
+ax.axis("equal")
+fig.patch.set_facecolor(BACKGROUND_COLOR)
+
+plt.tight_layout()
+plt.show()
