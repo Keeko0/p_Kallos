@@ -509,7 +509,7 @@ function renderSVGChart(selector, items, opts={height:200, showLabels:true}){
     // Original chart rendering for mini-chart
     const wrap = document.querySelector(selector);
     wrap.innerHTML='';
-    if (!items.length) { wrap.innerHTML = '<div class="muted">Brak danych</div>'; return; }
+    if (!items.length) { wrap.innerHTML = '<div class="muted">No data</div>'; return; }
     // [SVG chart logic here ... untouched]
     // ... (keep SVG rendering for mini-chart as in original code)
     return;
