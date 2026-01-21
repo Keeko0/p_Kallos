@@ -569,6 +569,44 @@ function addLog(txt){
   ul.insertBefore(li, ul.firstChild);
 }
 
+const simPct = $('#sim-pct');
+const simValueText = $('#sim-value');
+const simResult = $('#sim-result');
+const runSimBtn = $('#run-sim');
+
+if (simPct && runSimBtn) {
+    simPct.addEventListener('input', () => {
+        simValueText.textContent = simPct.value;
+    });
+
+    runSimBtn.addEventListener('click', () => {
+        if (state.data.length === 0) {
+            simResult.textContent = "No data available to simulate.";
+            return;
+        }
+        const percentage = parseFloat(simPct.value) / 100;
+        const currentTotal = state.data.reduce((sum, row) => sum + (row.salary || 0), 0);
+        const impact = currentTotal * percentage;
+        const newTotal = currentTotal + impact;
+
+        const fmt = (val) => val.toLocaleString('en-US', {
+            style: 'currency', 
+            currency: 'USD', 
+            maximumFractionDigits: 0 
+        });
+
+        simResult.innerHTML = `
+            <div style="margin-top:10px; padding:10px; background: rgba(0,0,0,0.05); border-radius: 6px;">
+                <strong>Simulation results for +${simPct.value}%:</strong><br>
+                Current budget: ${fmt(currentTotal)}<br>
+                <span style="color: var(--accent)">+ Budget impact: ${fmt(impact)}</span><br>
+                <strong>New total budget: ${fmt(newTotal)}</strong>
+            </div>
+        `;
+        addLog(`Simulation: +${simPct.value}% raise impact calculated`);
+    });
+}
+
 /* initial demo dataset */
 (function seed(){
   const demo = [
