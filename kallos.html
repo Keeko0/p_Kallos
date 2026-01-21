@@ -559,9 +559,9 @@ function updateKPI(){
 }
 function populateFilters(){
   const agencies = Array.from(new Set(state.data.map(d=>d.agency).filter(Boolean))).sort();
-  const sel = $('#filter-agency'); sel.innerHTML = '<option value="">Wszystkie</option>' + agencies.map(a=>`<option>${a}</option>`).join('');
+  const sel = $('#filter-agency'); sel.innerHTML = '<option value="">All</option>' + agencies.map(a=>`<option>${a}</option>`).join('');
   const years = Array.from(new Set(state.data.map(d=> (d.start_date||'').slice(0,4) ).filter(Boolean))).sort().reverse();
-  $('#filter-year').innerHTML = '<option value="">Wszystkie</option>' + years.map(y=>`<option>${y}</option>`).join('');
+  $('#filter-year').innerHTML = '<option value="">All</option>' + years.map(y=>`<option>${y}</option>`).join('');
 }
 function addLog(txt){
   const ul = $('#log-list');
